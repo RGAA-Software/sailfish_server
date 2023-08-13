@@ -30,6 +30,8 @@ namespace rgaa {
 
     class Data;
     class Thread;
+    class Context;
+    class MessageProcessor;
 
     class WSSession {
     public:
@@ -55,7 +57,7 @@ namespace rgaa {
     class WSServer {
     public:
 
-        WSServer(const std::string& ip, int port);
+        WSServer(const std::shared_ptr<Context>& ctx, const std::string& ip, int port);
         ~WSServer();
 
         void Start();
@@ -75,8 +77,10 @@ namespace rgaa {
 
     private:
 
+        std::shared_ptr<Context> context_ = nullptr;
         std::string ip_{};
         int port_ = 0;
+        std::shared_ptr<MessageProcessor> msg_processor_ = nullptr;
 
         std::shared_ptr<server> ws_server_ = nullptr;
         std::mutex session_mtx_;

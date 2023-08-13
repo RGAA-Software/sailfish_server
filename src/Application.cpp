@@ -48,7 +48,7 @@ namespace rgaa {
 
         capture_ = CaptureFactory::MakeCapture(context_);
 
-        ws_server_ = std::make_shared<WSServer>("0.0.0.0", 9090);
+        ws_server_ = std::make_shared<WSServer>(context_, "0.0.0.0", 9090);
     }
 
     void Application::Start() {
@@ -96,12 +96,8 @@ namespace rgaa {
         });
 
         for (;;) {
-            auto counter = RegionTimeCount::Make([](uint64_t count){
-//                LOGI("Count: {}", count);
-            });
             capture_->CaptureNextFrame();
-            //std::this_thread::sleep_for(std::chrono::milliseconds (16));
-            std::cout << ".";
+            //std::cout << ".";
         }
     }
 

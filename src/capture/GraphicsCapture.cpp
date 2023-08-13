@@ -75,7 +75,7 @@ namespace rgaa {
 //        }
 
         //
-        info.MonitorHandle = nullptr;
+//        info.MonitorHandle = nullptr;
 
         HMONITOR monitor = (HMONITOR)info.MonitorHandle;
         m_item = util::CreateCaptureItemForMonitor(monitor);

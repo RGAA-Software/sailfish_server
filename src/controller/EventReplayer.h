@@ -5,7 +5,7 @@
 namespace rgaa
 {
 
-	class Message;
+	class NetMessage;
 	class Context;
 	class MouseReplayer;
 	class KeyboardReplayer;
@@ -14,10 +14,10 @@ namespace rgaa
 
 	public:
 
-		EventReplayer(std::shared_ptr<Context> ctx);
+		explicit EventReplayer(const std::shared_ptr<Context>& ctx);
 		~EventReplayer();
 
-		void Replay(std::shared_ptr<Message> msg);
+		void Replay(const std::shared_ptr<NetMessage>& msg);
 
 	private:
 

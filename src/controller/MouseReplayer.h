@@ -5,17 +5,16 @@
 namespace rgaa
 {
 
-	class Message;
+	class NetMessage;
 	class Context;
 
 	class MouseReplayer {
 	public:
 		
-		MouseReplayer(std::shared_ptr<Context> ctx);
+		explicit MouseReplayer(const std::shared_ptr<Context>& ctx);
 		~MouseReplayer();
 
-		void ReplayGlobalAbsolute(std::shared_ptr<Message> msg);
-		void ReplayAppOnly(std::shared_ptr<Message> msg);
+		void ReplayGlobalAbsolute(const std::shared_ptr<NetMessage>& msg);
 
 	private:
 

@@ -8,12 +8,16 @@
 #include "rgaa_common/RTime.h"
 #include "rgaa_common/RData.h"
 #include "rgaa_common/RThread.h"
+#include "MessageProcessor.h"
+#include "messages.pb.h"
 
 namespace rgaa {
 
-    WSServer::WSServer(const std::string& ip, int port) {
+    WSServer::WSServer(const std::shared_ptr<Context>& ctx, const std::string& ip, int port) {
+        this->context_ = ctx;
         this->ip_ = ip;
         this->port_ = port;
+        msg_processor_ = std::make_shared<MessageProcessor>(ctx);
     }
 
     WSServer::~WSServer() {
@@ -31,7 +35,6 @@ namespace rgaa {
                 ws_server_->init_asio();
                 ws_server_->set_message_handler([=, this](websocketpp::connection_hdl hdl, message_ptr msg) {
                     ProcessMessage(hdl, msg);
-                    LOGI("Msg arrive");
                 });
 
                 ws_server_->set_open_handler([=, this](websocketpp::connection_hdl hdl) {
@@ -138,9 +141,8 @@ namespace rgaa {
 
         }
         std::string value = msg->get_payload();
-        LOGI("Msg: {}", value);
-//        std::shared_ptr<Message> message = std::make_shared<Message>();
-//        message->ParseFromString(value);
+        msg_processor_->ProcessMessage(value);
+
 //
 //        this->msg_proc_thread->Post(SimpleThreadTask::Make([=]() {
 //            if (message->has_mouse_info() || message->has_keyboard_info()) {

@@ -5,17 +5,16 @@
 namespace rgaa
 {
 
-	class Message;
+	class NetMessage;
 	class Context;
 
 	class KeyboardReplayer {
 	public:
 		
-		KeyboardReplayer(std::shared_ptr<Context> context);
+		explicit KeyboardReplayer(const std::shared_ptr<Context>& context);
 		~KeyboardReplayer();
 
-		void ReplayKeyboard(std::shared_ptr<Message> msg);
-		void ReplayKeyboardAppOnly(std::shared_ptr<Message> msg);
+		void ReplayKeyboardGlobal(const std::shared_ptr<NetMessage>& msg);
 
 	private:
 
