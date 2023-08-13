@@ -1,0 +1,12 @@
+[submodule "deps/rgaa_common"]
+	path = deps/rgaa_common
+	url = https://github.com/RGAA-Software/rgaa_common.git
+[submodule "deps/ext_ffmpeg_prebuild"]
+	path = deps/ext_ffmpeg_prebuild
+	url = https://github.com/RGAA-Software/ext_ffmpeg_prebuild.git
+[submodule "deps/websocketpp"]
+	path = deps/websocketpp
+	url = https://github.com/zaphoyd/websocketpp.git
+[submodule "deps/sailfish_protos"]
+	path = deps/sailfish_protos
+	url = https://github.com/RGAA-Software/sailfish_protos.git

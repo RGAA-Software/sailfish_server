@@ -33,9 +33,9 @@ namespace rgaa
 
 			Monitor monitor_custom = info->mons[i];
 
-			printf("Monitor : %d, name : %s is primary : %d. resolution : %d x %d. left : %d, top : %d, right : %d, bottom : %d, scaled width : %d, scaled height : %d\n", i,
-				monitor_custom.name, is_primary_screen, width, height, monitor_region.left, monitor_region.top, monitor_region.right,
-				monitor_region.bottom, monitor_region, monitor_custom.scaled_width, monitor_custom.scaled_height);
+//			printf("Monitor : %d, name : %s is primary : %d. resolution : %d x %d. left : %d, top : %d, right : %d, bottom : %d, scaled width : %d, scaled height : %d\n", i,
+//				monitor_custom.name, is_primary_screen, width, height, monitor_region.left, monitor_region.top, monitor_region.right,
+//				monitor_region.bottom, monitor_region, monitor_custom.scaled_width, monitor_custom.scaled_height);
 		}
 	}
 

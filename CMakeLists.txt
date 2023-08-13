@@ -29,9 +29,10 @@ endif ()
 # config end
 
 # find packages
-find_package(glfw3 CONFIG REQUIRED)
+#find_package(glfw3 CONFIG REQUIRED)
 find_package(libyuv CONFIG REQUIRED)
 find_package(protobuf CONFIG REQUIRED)
+find_package(wil CONFIG REQUIRED)
 
 # If you want to use ffmpeg installed by your vcpkg, you need to
 # ensure that ffmpeg's encoders were enabled, such as,
@@ -65,7 +66,7 @@ add_subdirectory(deps)
 
 add_executable(sailfish_server main.cpp)
 target_link_libraries(sailfish_server main)
-target_link_libraries(sailfish_server glfw ${Boost_LIBRARIES})
+target_link_libraries(sailfish_server #[[glfw]] ${Boost_LIBRARIES} WIL::WIL)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     add_custom_command(TARGET sailfish_server PRE_BUILD
