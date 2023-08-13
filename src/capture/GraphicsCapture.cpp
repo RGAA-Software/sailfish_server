@@ -74,11 +74,12 @@ namespace rgaa {
 //            return;
 //        }
 
-        //
-//        info.MonitorHandle = nullptr;
+        LOGI("Monitor Handle : {}", (void*)info.MonitorHandle);
 
         HMONITOR monitor = (HMONITOR)info.MonitorHandle;
         m_item = util::CreateCaptureItemForMonitor(monitor);
+
+//        m_item = util::CreateCaptureItemForMonitor(nullptr);
 
     //    capture_monitor = MonitorDetector::Instance()->GetMonitorByName(name);
     //    if (!capture_monitor) {
@@ -91,7 +92,8 @@ namespace rgaa {
         auto dxgiDevice = d3dDevice.as<IDXGIDevice>();
         m_device = CreateDirect3DDevice(dxgiDevice.get());
         //m_device = device;
-        m_pixelFormat = winrt::Windows::Graphics::DirectX::DirectXPixelFormat::R8G8B8A8UIntNormalized;
+//        m_pixelFormat = winrt::Windows::Graphics::DirectX::DirectXPixelFormat::R8G8B8A8UIntNormalized;
+        m_pixelFormat = winrt::Windows::Graphics::DirectX::DirectXPixelFormat::B8G8R8A8UIntNormalized;
 
         //auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
         d3dDevice->GetImmediateContext(m_d3dContext.put());
@@ -105,8 +107,8 @@ namespace rgaa {
         // the frame pool was created on. This also means that the creating thread
         // must have a DispatcherQueue. If you use this method, it's best not to do
         // it on the UI thread.
-        m_framePool = winrt::Direct3D11CaptureFramePool::CreateFreeThreaded(m_device, m_pixelFormat, 2, m_item.Size());
-        //m_framePool = winrt::Direct3D11CaptureFramePool::CreateFreeThreaded(m_device, m_pixelFormat, 1, m_item.Size());
+        //m_framePool = winrt::Direct3D11CaptureFramePool::CreateFreeThreaded(m_device, m_pixelFormat, 2, m_item.Size());
+        m_framePool = winrt::Direct3D11CaptureFramePool::CreateFreeThreaded(m_device, m_pixelFormat, 1, m_item.Size());
         m_session = m_framePool.CreateCaptureSession(m_item);
         m_session.IsCursorCaptureEnabled(false);
         m_lastSize = m_item.Size();

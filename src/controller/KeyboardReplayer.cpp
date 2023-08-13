@@ -23,14 +23,13 @@ namespace rgaa
 		int scancode = info.scancode();
 		bool caps_lock = info.caps_lock();
 		bool num_lock = info.num_lock();
-		LOGI("vk : {}, pressed : {}, scancode : {}, caps lock : {}, num lock : {} ", vk, pressed, scancode, caps_lock, num_lock);
 
 		INPUT m_InPut;
         memset(&m_InPut, 0, sizeof(INPUT));
 		m_InPut.type = INPUT_KEYBOARD;
-		m_InPut.ki.wVk = 0;//vk;
-        m_InPut.ki.dwFlags = KEYEVENTF_SCANCODE;
-        m_InPut.ki.wScan = MapVirtualKey(vk, MAPVK_VK_TO_VSC);
+		m_InPut.ki.wVk = vk;
+        m_InPut.ki.dwFlags = KEYEVENTF_UNICODE;  //KEYEVENTF_SCANCODE;
+        m_InPut.ki.wScan = 0;  //MapVirtualKey(vk, MAPVK_VK_TO_VSC);
         m_InPut.ki.dwExtraInfo = 0;
         m_InPut.ki.time = 0;
 
@@ -39,7 +38,6 @@ namespace rgaa
 		}
         if (IsSystemKey(vk)) {
             m_InPut.ki.dwFlags |= KEYEVENTF_EXTENDEDKEY;
-            LOGI("Extend : {0:x}", vk);
         }
 
         if (SendInput(1, &m_InPut, sizeof(INPUT)) != 1) {
@@ -61,7 +59,6 @@ namespace rgaa
                return true;
            }
         }
-
         return false;
     }
 
