@@ -16,6 +16,10 @@ namespace rgaa
 
 		void ReplayKeyboardGlobal(const std::shared_ptr<NetMessage>& msg);
 
+    private:
+
+        bool IsSystemKey(int vk);
+
 	private:
 
 		std::shared_ptr<Context> context = nullptr;
