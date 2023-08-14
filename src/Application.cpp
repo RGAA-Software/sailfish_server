@@ -23,6 +23,9 @@
 #include "encoder/EncodedFrame.h"
 #include "rgaa_common/RTime.h"
 #include "rgaa_common/RCloser.h"
+#include "audio/AudioCaptureFactory.h"
+#include "audio/AudioCapture.h"
+#include "rgaa_common/RThread.h"
 
 #ifdef _OS_WINDOWS_
 #define WIN32_LEAN_AND_MEAN
@@ -36,7 +39,13 @@ namespace rgaa {
     }
 
     Application::~Application() {
-
+        if (audio_capture_) {
+            audio_capture_->Pause();
+            audio_capture_->Stop();
+        }
+        if (audio_thread_ && audio_thread_->IsJoinable()) {
+            audio_thread_->Join();
+        }
     }
 
     void Application::Init() {
@@ -54,7 +63,8 @@ namespace rgaa {
     void Application::Start() {
 
         ws_server_->Start();
-        StartCapturing();
+        StartAudioCapturing();
+        StartVideoCapturing();
 
         auto msg_queue = context_->GetMessageQueue();
         std::shared_ptr<Message> msg = nullptr;
@@ -63,7 +73,7 @@ namespace rgaa {
         }
     }
 
-    void Application::StartCapturing() {
+    void Application::StartVideoCapturing() {
         if (!capture_) {
             return;
         }
@@ -115,6 +125,29 @@ namespace rgaa {
         bool ok = encoder->Init();
         encoders_.insert(std::make_pair(dup_idx, encoder));
         return ok ? encoder : nullptr;
+    }
+
+    void Application::StartAudioCapturing() {
+        audio_thread_ = std::make_shared<Thread>([=, this] (){
+
+            audio_capture_ = AudioCaptureFactory::MakeAudioCapture();
+            if (audio_capture_->Prepare() != 0) {
+                LOGE("Init audio capture failed.");
+                return;
+            }
+
+            audio_capture_->RegisterFormatCallback([=, this](int samples, int channels, int bits) {
+
+            });
+
+            audio_capture_->RegisterDataCallback([=, this] (rgaa::DataPtr data){
+
+            });
+
+            audio_capture_->StartRecording();
+
+        }, "", false);
+
     }
 
 }

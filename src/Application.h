@@ -15,6 +15,8 @@ namespace rgaa {
     class Encoder;
     class Settings;
     class WSServer;
+    class IAudioCapture;
+    class Thread;
 
     class Application {
     public:
@@ -26,7 +28,8 @@ namespace rgaa {
 
     private:
 
-        void StartCapturing();
+        void StartVideoCapturing();
+        void StartAudioCapturing();
         std::shared_ptr<Encoder> GetEncoderForIndex(int dup_idx);
         std::shared_ptr<Encoder> MakeEncoder(int dup_idx, int w, int h);
 
@@ -37,6 +40,9 @@ namespace rgaa {
         std::map<int, std::shared_ptr<Encoder>> encoders_;
 
         std::shared_ptr<WSServer> ws_server_ = nullptr;
+
+        std::shared_ptr<Thread> audio_thread_ = nullptr;
+        std::shared_ptr<IAudioCapture> audio_capture_ = nullptr;
 
         Settings* settings_ = nullptr;
 
