@@ -16,7 +16,7 @@
 namespace rgaa {
 
 	FFmpegEncoder::FFmpegEncoder(const std::shared_ptr<Context>& ctx, int dup_idx, const std::string& encoder_name, int width, int height)
-        : Encoder(ctx, dup_idx, encoder_name, width, height) {
+        : VideoEncoder(ctx, dup_idx, encoder_name, width, height) {
 #if DEBUG_ENCODE_FILE
         auto suffix = settings_->GetEncodeType() == EncodeType::kH265 ? ".h265" : ".h264";
         auto debug_file_name = "debug_encode_" + std::to_string(dup_idx) + suffix;
@@ -43,7 +43,7 @@ namespace rgaa {
 	}
 
 	bool FFmpegEncoder::Init() {
-        Encoder::Init();
+        VideoEncoder::Init();
 
         av_log_set_level(AV_LOG_WARNING);
         av_log_set_callback([](void* ptr, int level, const char* fmt, va_list vl) {

@@ -10,14 +10,14 @@
 
 namespace rgaa {
 
-    class Encoder;
+    class VideoEncoder;
     class Context;
     class SupportedEncoder;
 
     class EncoderFactory {
     public:
 
-        static std::shared_ptr<Encoder> MakeEncoder(const std::shared_ptr<Context>& ctx, int dup_idx, int width, int height);
+        static std::shared_ptr<VideoEncoder> MakeEncoder(const std::shared_ptr<Context>& ctx, int dup_idx, int width, int height);
         static std::shared_ptr<SupportedEncoder> SelectEncoder();
     };
 

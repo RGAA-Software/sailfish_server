@@ -12,4 +12,4 @@ add_subdirectory(audio)
 
 aux_source_directory(. SRCS)
 add_library(main ${SRCS})
-target_link_libraries(main capture settings context common encoder network controller audio)
+target_link_libraries(main capture settings context common encoder network controller audio opus_codec)

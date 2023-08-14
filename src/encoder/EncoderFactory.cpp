@@ -11,7 +11,7 @@
 
 namespace rgaa {
 
-    std::shared_ptr<Encoder> EncoderFactory::MakeEncoder(const std::shared_ptr<Context>& ctx, int dup_idx, int width, int height) {
+    std::shared_ptr<VideoEncoder> EncoderFactory::MakeEncoder(const std::shared_ptr<Context>& ctx, int dup_idx, int width, int height) {
         auto supported_encoder = SelectEncoder();
         if (!supported_encoder) {
             return nullptr;

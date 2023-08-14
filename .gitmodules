@@ -10,3 +10,6 @@
 [submodule "deps/sailfish_protos"]
 	path = deps/sailfish_protos
 	url = https://github.com/RGAA-Software/sailfish_protos.git
+[submodule "deps/rgaa_opus_codec"]
+	path = deps/rgaa_opus_codec
+	url = https://github.com/RGAA-Software/rgaa_opus_codec.git

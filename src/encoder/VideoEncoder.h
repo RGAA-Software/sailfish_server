@@ -2,8 +2,8 @@
 // Created by RGAA on 2023/8/10.
 //
 
-#ifndef SAILFISH_SERVER_ENCODER_H
-#define SAILFISH_SERVER_ENCODER_H
+#ifndef SAILFISH_SERVER_VIDEOENCODER_H
+#define SAILFISH_SERVER_VIDEOENCODER_H
 
 #include <memory>
 #include <string>
@@ -16,11 +16,11 @@ namespace rgaa {
     class Data;
     class EncodedVideoFrame;
 
-    class Encoder {
+    class VideoEncoder {
     public:
 
-        Encoder(const std::shared_ptr<Context>& ctx, int dup_idx, const std::string& encoder_name, int width, int height);
-        ~Encoder();
+        VideoEncoder(const std::shared_ptr<Context>& ctx, int dup_idx, const std::string& encoder_name, int width, int height);
+        ~VideoEncoder();
 
         virtual bool Init();
         virtual void Exit();
@@ -45,4 +45,4 @@ namespace rgaa {
 
 }
 
-#endif //SAILFISH_SERVER_ENCODER_H
+#endif //SAILFISH_SERVER_VIDEOENCODER_H

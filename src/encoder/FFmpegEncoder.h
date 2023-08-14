@@ -5,7 +5,7 @@
 #include <string>
 #include <fstream>
 
-#include "Encoder.h"
+#include "VideoEncoder.h"
 
 extern "C" {
     #include <libavcodec/avcodec.h>
@@ -19,7 +19,7 @@ namespace rgaa {
 
     class Data;
 
-	class FFmpegEncoder : public Encoder {
+	class FFmpegEncoder : public VideoEncoder {
 	public:
         FFmpegEncoder(const std::shared_ptr<Context>& ctx, int dup_idx, const std::string& encoder_name, int width, int height);
 		~FFmpegEncoder();

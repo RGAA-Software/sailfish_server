@@ -15,7 +15,7 @@
 #include "capture/DDACapture.h"
 #include "capture/CaptureFactory.h"
 #include "capture/CapturedFrame.h"
-#include "encoder/Encoder.h"
+#include "encoder/VideoEncoder.h"
 #include "encoder/EncoderFactory.h"
 #include "encoder/FFmpegEncoder.h"
 #include "rgaa_common/RLog.h"
@@ -26,6 +26,8 @@
 #include "audio/AudioCaptureFactory.h"
 #include "audio/AudioCapture.h"
 #include "rgaa_common/RThread.h"
+#include "encoder/AudioEncoder.h"
+#include "network/MessageMaker.h"
 
 #ifdef _OS_WINDOWS_
 #define WIN32_LEAN_AND_MEAN
@@ -93,6 +95,13 @@ namespace rgaa {
                          (int)settings_->GetEncodeType(), cp_frame->dup_index_, cp_frame->frame_width_, cp_frame->frame_height_);
                     return;
                 }
+
+                if (ws_server_) {
+                    auto msg = MessageMaker::MakeVideoConfigSync(settings_->GetEncodeType(),
+                                                                 cp_frame->frame_width_,
+                                                                 cp_frame->frame_height_);
+                    ws_server_->PostBinaryMessage(msg);
+                }
             }
             auto encoded_frame = encoder->Encode(cp_frame);
             if (encoded_frame && ws_server_) {
@@ -111,7 +120,7 @@ namespace rgaa {
         }
     }
 
-    std::shared_ptr<Encoder> Application::GetEncoderForIndex(int dup_idx) {
+    std::shared_ptr<VideoEncoder> Application::GetEncoderForIndex(int dup_idx) {
         for (auto& en : encoders_) {
             if (en.first == dup_idx) {
                 return en.second;
@@ -120,7 +129,7 @@ namespace rgaa {
         return nullptr;
     }
 
-    std::shared_ptr<Encoder> Application::MakeEncoder(int dup_idx, int w, int h) {
+    std::shared_ptr<VideoEncoder> Application::MakeEncoder(int dup_idx, int w, int h) {
         auto encoder = EncoderFactory::MakeEncoder(context_, dup_idx,w, h);
         bool ok = encoder->Init();
         encoders_.insert(std::make_pair(dup_idx, encoder));
@@ -137,11 +146,24 @@ namespace rgaa {
             }
 
             audio_capture_->RegisterFormatCallback([=, this](int samples, int channels, int bits) {
-
+                audio_encoder_ = std::make_shared<AudioEncoder>(context_, samples, channels, bits);
+                if (ws_server_) {
+                    auto msg = MessageMaker::MakeAudioConfigSync(samples, channels);
+                    ws_server_->PostBinaryMessage(msg);
+                }
             });
 
             audio_capture_->RegisterDataCallback([=, this] (rgaa::DataPtr data){
-
+                if (!audio_encoder_) {
+                    return;
+                }
+                // 2 channels, 16bits/8 = 2bytes, frame size is int16 format
+                int frame_size = data->Size() / 2 / 2;
+                auto encoded_audio_frame = audio_encoder_->Encode(data, frame_size);
+                if (encoded_audio_frame && ws_server_) {
+                    auto msg = MessageMaker::MakeAudioFrameSync(encoded_audio_frame, frame_size);
+                    ws_server_->PostBinaryMessage(msg);
+                }
             });
 
             audio_capture_->StartRecording();

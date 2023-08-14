@@ -21,7 +21,7 @@ namespace rgaa {
         for (auto& [encoder_name, readable_name] : encoder_names) {
             const AVCodec* codec = avcodec_find_encoder_by_name(encoder_name.c_str());
             if (!codec) {
-                LOGW("Encoder : {} not supported.", encoder_name);
+                LOGW("VideoEncoder : {} not supported.", encoder_name);
                 continue;
             }
 
@@ -64,7 +64,7 @@ namespace rgaa {
     void EncoderChecker::DumpSupportedEncoders() {
         LOGI("Total supported encoders : {}", supported_encoders_.size());
         for (auto& encoder : supported_encoders_) {
-            LOGI("Encoder name : {}, encoder kind : {}", encoder->name_, (int)encoder->kind_);
+            LOGI("VideoEncoder name : {}, encoder kind : {}", encoder->name_, (int)encoder->kind_);
         }
     }
 
