@@ -4,6 +4,7 @@
 
 #include <memory>
 #include <functional>
+#include <vector>
 
 constexpr auto kAudioFrameSize = 960;
 
@@ -18,12 +19,12 @@ namespace rgaa
 	class AudioEncoder {
 	public:
 		
-		// 48000 2 16
+		// eg: 48000 2 16
 		AudioEncoder(const std::shared_ptr<Context>& ctx, int samples, int channels, int bits);
 		~AudioEncoder();
 
 		bool IsValid();
-		std::shared_ptr<Data> Encode(const std::shared_ptr<Data>& data, int frame_size);
+		std::vector<std::shared_ptr<Data>> Encode(const std::shared_ptr<Data>& data, int frame_size);
 		int Channels();
 		int Samples();
 		int Bits();

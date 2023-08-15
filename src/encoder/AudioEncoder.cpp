@@ -42,22 +42,23 @@ namespace rgaa
 		return bits;
 	}
 
-	std::shared_ptr<Data> AudioEncoder::Encode(const std::shared_ptr<Data>& data, int frame_size) {
+    std::vector<std::shared_ptr<Data>> AudioEncoder::Encode(const std::shared_ptr<Data>& data, int frame_size) {
+        std::vector<DataPtr> frames;
 		if (!encoder || !encoder->valid()) {
 			LOGE("invalid audio encoder .");
-			return nullptr;
+			return frames;
 		}
 		std::vector<opus_int16> audio_data(frame_size * this->channels);
 		if (data->Size() != audio_data.size() * 2) {
 			LOGE("audio frame size invalid .");
-			return nullptr;
+			return frames;
 		}
 		
 		memcpy((char*)audio_data.data(), data->DataAddr(), data->Size());
 		auto encoded_frame = encoder->Encode(audio_data, frame_size);
 		if (encoded_frame.empty()) {
 			LOGE("no frames after encode.");
-			return nullptr;
+			return frames;
 		}
 
 		for (auto& piece : encoded_frame) {
@@ -72,9 +73,9 @@ namespace rgaa
 				offset += bytes_size;
 			}
 #endif
-			return Data::Make((char*)piece.data(), (int)piece.size());
+            frames.push_back(Data::Make((char*)piece.data(), (int)piece.size()));
 		}
 
-        return nullptr;
+        return frames;
 	}
 }

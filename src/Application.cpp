@@ -159,12 +159,14 @@ namespace rgaa {
                 }
                 // 2 channels, 16bits/8 = 2bytes, frame size is int16 format
                 int frame_size = data->Size() / 2 / 2;
-                auto encoded_audio_frame = audio_encoder_->Encode(data, frame_size);
-                if (encoded_audio_frame && ws_server_) {
+                auto frames = audio_encoder_->Encode(data, frame_size);
+                if (!frames.empty() && ws_server_) {
                     auto samples = audio_encoder_->Samples();
                     auto channels = audio_encoder_->Channels();
-                    auto msg = MessageMaker::MakeAudioFrameSync(encoded_audio_frame, frame_size, samples, channels);
-                    ws_server_->PostBinaryMessage(msg);
+                    for (const auto& frame : frames) {
+                        auto msg = MessageMaker::MakeAudioFrameSync(frame, frame_size, samples, channels);
+                        ws_server_->PostBinaryMessage(msg);
+                    }
                 }
             });
 
