@@ -29,7 +29,7 @@ namespace rgaa
 		int Stop() override;
 	
 	private:
-
+        bool released = false;
 		BOOL bDone = FALSE;
 	};
 

@@ -200,39 +200,25 @@ namespace rgaa
 
                 hr = pCaptureClient->GetNextPacketSize(&packetLength);
                 EXIT_ON_ERROR(hr)
-
-                auto end = GetCurrentTimestamp();
-                //std::cout << "time : " << (end - begin) << std::endl;
             }
-
-            //static int cnt = 0;
-            //std::cout << "cnt : " << cnt << std::endl;
-            //if (cnt++ > 10000) {
-            //    break;
-            //}
         }
 
         hr = pAudioClient->Stop();  // Stop recording.
         std::cout << "stopped recording .." << hr << " " << GetLastError() << std::endl;
         EXIT_ON_ERROR(hr)
         if (file_saver) {
-            std::cout << "finish recoding ..." << std::endl;
             hr = std::static_pointer_cast<WAVAudioFileSaver>(file_saver)->FinishWaveFile(&ckData, &ckRIFF);
-        }
-            
-        if (FAILED(hr)) {
-            // FinishWaveFile does it's own logging
-            return hr;
         }
 
     Exit:
-        // ���Ǹ��ֲ��������ͷžͱ�����
-        //CoTaskMemFree(pwfx);
-        LOG_INFO("WASAPIAudioCapture�� Release device .");
+        LOGI("WASAPIAudioCapture Release device .");
         SAFE_RELEASE(pCaptureClient)
         SAFE_RELEASE(pAudioClient)
         SAFE_RELEASE(pDevice)
         SAFE_RELEASE(pEnumerator)
+
+        released = true;
+
         return hr;
 	}
 
@@ -242,6 +228,10 @@ namespace rgaa
 
 	int WASAPIAudioCapture::Stop() {
         bDone = TRUE;
+        while(!released) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        LOGI("WASAPI audio capture released.");
         return 0;
 	}
 

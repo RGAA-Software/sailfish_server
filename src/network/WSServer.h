@@ -26,6 +26,8 @@ typedef server::message_ptr message_ptr;
 #include <string>
 #include <map>
 
+#include "Connection.h"
+
 namespace rgaa {
 
     class Data;
@@ -54,10 +56,10 @@ namespace rgaa {
     typedef std::shared_ptr<WSSession> WSSessionPtr;
 
 
-    class WSServer {
+    class WSServer : public Connection {
     public:
 
-        WSServer(const std::shared_ptr<Context>& ctx, const std::string& ip, int port);
+        WSServer(const std::shared_ptr<Context>& ctx, const std::shared_ptr<MessageProcessor>& processor, const std::string& ip, int port);
         ~WSServer();
 
         void Start();
@@ -76,11 +78,6 @@ namespace rgaa {
         void ProcessMessage(websocketpp::connection_hdl hdl, message_ptr msg);
 
     private:
-
-        std::shared_ptr<Context> context_ = nullptr;
-        std::string ip_{};
-        int port_ = 0;
-        std::shared_ptr<MessageProcessor> msg_processor_ = nullptr;
 
         std::shared_ptr<server> ws_server_ = nullptr;
         std::mutex session_mtx_;

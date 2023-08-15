@@ -5,6 +5,8 @@
 #ifndef SAILFISH_SERVER_SETTINGS_H
 #define SAILFISH_SERVER_SETTINGS_H
 
+#include <string>
+
 namespace rgaa {
 
     enum class EncodeType {
@@ -22,6 +24,11 @@ namespace rgaa {
         kWinGraphicsCapture,
     };
 
+    enum class ConnectionMode {
+        kDirect,
+        kRelay,
+    };
+
     class Settings {
     public:
 
@@ -36,11 +43,24 @@ namespace rgaa {
         CaptureMonitorType GetCaptureMonitorType();
         CaptureAPI GetCaptureAPI();
 
+        int GetListenPort();
+        ConnectionMode GetConnectionMode();
+
+        std::string GetRelayHost();
+        int GetRelayPort();
+
+
     private:
 
         EncodeType encode_type_ = EncodeType::kH264;
         CaptureMonitorType capture_monitor_type_ = CaptureMonitorType::kAll;
         CaptureAPI capture_api_ = CaptureAPI::kWinGraphicsCapture;
+        ConnectionMode connection_mode_ = ConnectionMode::kDirect;
+        int listen_port_ = 9090;
+
+        std::string relay_host;
+        int relay_port = 9092;
+
     };
 
 }

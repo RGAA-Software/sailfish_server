@@ -25,21 +25,7 @@ namespace rgaa {
 	}
 	
 	FFmpegEncoder::~FFmpegEncoder() {
-        if (codec_context_) {
-            avcodec_close(codec_context_);
-            avcodec_free_context(&codec_context_);
-        }
-        if (frame_) {
-            av_frame_free(&frame_);
-        }
-        if (packet_) {
-            av_packet_unref(packet_);
-        }
-#if DEBUG_ENCODE_FILE
-        if (debug_encoder_file_.is_open()) {
-            debug_encoder_file_.close();
-        }
-#endif
+
 	}
 
 	bool FFmpegEncoder::Init() {
@@ -139,7 +125,22 @@ namespace rgaa {
 	}
 
 	void FFmpegEncoder::Exit() {
-		
+        if (codec_context_) {
+            avcodec_close(codec_context_);
+            avcodec_free_context(&codec_context_);
+        }
+        if (frame_) {
+            av_frame_free(&frame_);
+        }
+        if (packet_) {
+            av_packet_unref(packet_);
+        }
+        LOGI("FFmpeg eocoder exit.");
+#if DEBUG_ENCODE_FILE
+        if (debug_encoder_file_.is_open()) {
+            debug_encoder_file_.close();
+        }
+#endif
 	}
 
     std::shared_ptr<EncodedVideoFrame> FFmpegEncoder::Encode(const std::shared_ptr<CapturedFrame> &cp_frame) {

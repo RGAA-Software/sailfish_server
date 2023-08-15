@@ -28,6 +28,7 @@ namespace rgaa
 		int Channels();
 		int Samples();
 		int Bits();
+        void Exit();
 
 	private:
 		std::shared_ptr<Context> context = nullptr;

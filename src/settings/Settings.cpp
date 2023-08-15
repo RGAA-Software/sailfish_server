@@ -25,4 +25,20 @@ namespace rgaa {
         return capture_api_;
     }
 
+    int Settings::GetListenPort() {
+        return listen_port_;
+    }
+
+    ConnectionMode Settings::GetConnectionMode() {
+        return connection_mode_;
+    }
+
+    std::string Settings::GetRelayHost() {
+        return relay_host;
+    }
+
+    int Settings::GetRelayPort() {
+        return relay_port;
+    }
+
 }

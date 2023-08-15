@@ -41,6 +41,7 @@ namespace rgaa {
         OnFrameCapturedCallback captured_cbk_;
 
         bool exit_ = false;
+        bool exit_already_processed_ = false;
 
         int capture_monitor_idx_ = 0;
 

@@ -10,9 +10,13 @@
 #include <QElapsedTimer>
 #include <QFile>
 
+#include "Application.h"
+#include "context/Context.h"
+
 namespace rgaa {
 
     Workspace::Workspace(const std::shared_ptr<Context>& ctx, QWidget* parent) : QMainWindow(parent) {
+        context_ = ctx;
         setWindowTitle(tr("Sailfish Server"));
         CreateLayout();
         LoadStyle("");
@@ -33,13 +37,22 @@ namespace rgaa {
 
         // 1. app menu
         auto app_menu = new QPushButton(this);
-        app_menu->setText("dfsakfsdakfjk");
+        app_menu->setText("Start");
         root_layout->addWidget(app_menu);
+        connect(app_menu, &QPushButton::clicked, this, [=, this]() {
+            application_ = std::make_shared<Application>(context_);
+            application_->Init();
+            application_->Start();
+        });
 
         // 2. stream list
         auto stream_list = new QPushButton(this);
-        stream_list->setText("dfsakfsdakfjk");
+        stream_list->setText("Stop");
         root_layout->addWidget(stream_list);
+        connect(stream_list, &QPushButton::clicked, this, [=, this]() {
+            application_->Exit();
+            application_.reset();
+        });
 
         root_widget->setLayout(root_layout);
         setCentralWidget(root_widget);

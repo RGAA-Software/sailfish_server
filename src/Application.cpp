@@ -36,35 +36,26 @@
 
 namespace rgaa {
 
-    Application::Application() {
-
+    Application::Application(const std::shared_ptr<Context>& ctx) {
+        context_ = ctx;
+        connection_ = context_->GetConnection();
     }
 
     Application::~Application() {
-        if (audio_capture_) {
-            audio_capture_->Pause();
-            audio_capture_->Stop();
-        }
-        if (audio_thread_ && audio_thread_->IsJoinable()) {
-            audio_thread_->Join();
-        }
+
     }
 
     void Application::Init() {
         settings_ = Settings::Instance();
         settings_->LoadSettings();
 
-        context_ = std::make_shared<Context>();
-        context_->Init();
-
         capture_ = CaptureFactory::MakeCapture(context_);
 
-        ws_server_ = std::make_shared<WSServer>(context_, "0.0.0.0", 9090);
+
     }
 
     void Application::Start() {
 
-        ws_server_->Start();
         StartAudioCapturing();
         StartVideoCapturing();
 
@@ -96,28 +87,28 @@ namespace rgaa {
                     return;
                 }
 
-                if (ws_server_) {
+                if (connection_) {
                     auto msg = MessageMaker::MakeVideoConfigSync(settings_->GetEncodeType(),
                                                                  cp_frame->frame_width_,
                                                                  cp_frame->frame_height_);
-                    ws_server_->PostBinaryMessage(msg);
+                    connection_->PostBinaryMessage(msg);
                 }
             }
             auto encoded_frame = encoder->Encode(cp_frame);
-            if (encoded_frame && ws_server_) {
+            if (encoded_frame && connection_) {
                 auto msg = encoded_frame->AsProtoMessageStr();
                 auto duration_from_capture = GetCurrentTimestamp() - encoded_frame->captured_time_;
                 auto duration_from_encode = GetCurrentTimestamp() - encoded_frame->encoded_time_;
                 //LOGI("Duration from capture: {}", duration_from_capture);
 
-                ws_server_->PostBinaryMessage(msg);
+                connection_->PostBinaryMessage(msg);
             }
         });
 
-        for (;;) {
-            capture_->CaptureNextFrame();
-            //std::cout << ".";
-        }
+//        for (;;) {
+//            capture_->CaptureNextFrame();
+//            //std::cout << ".";
+//        }
     }
 
     std::shared_ptr<VideoEncoder> Application::GetEncoderForIndex(int dup_idx) {
@@ -147,9 +138,9 @@ namespace rgaa {
 
             audio_capture_->RegisterFormatCallback([=, this](int samples, int channels, int bits) {
                 audio_encoder_ = std::make_shared<AudioEncoder>(context_, samples, channels, bits);
-                if (ws_server_) {
+                if (connection_) {
                     auto msg = MessageMaker::MakeAudioConfigSync(samples, channels);
-                    ws_server_->PostBinaryMessage(msg);
+                    connection_->PostBinaryMessage(msg);
                 }
             });
 
@@ -160,12 +151,12 @@ namespace rgaa {
                 // 2 channels, 16bits/8 = 2bytes, frame size is int16 format
                 int frame_size = data->Size() / 2 / 2;
                 auto frames = audio_encoder_->Encode(data, frame_size);
-                if (!frames.empty() && ws_server_) {
+                if (!frames.empty() && connection_) {
                     auto samples = audio_encoder_->Samples();
                     auto channels = audio_encoder_->Channels();
                     for (const auto& frame : frames) {
                         auto msg = MessageMaker::MakeAudioFrameSync(frame, frame_size, samples, channels);
-                        ws_server_->PostBinaryMessage(msg);
+                        connection_->PostBinaryMessage(msg);
                     }
                 }
             });
@@ -174,6 +165,32 @@ namespace rgaa {
 
         }, "audio_capture", false);
 
+    }
+
+    void Application::Exit() {
+        if (capture_) {
+            capture_->Exit();
+            capture_.reset();
+        }
+        for (auto& [k, encoder] : encoders_) {
+            if (encoder) {
+                encoder->Exit();
+                encoder.reset();
+            }
+        }
+        if (audio_capture_) {
+            audio_capture_->Pause();
+            audio_capture_->Stop();
+            audio_capture_.reset();
+        }
+        if (audio_encoder_) {
+            audio_encoder_->Exit();
+        }
+        if (audio_thread_ && audio_thread_->IsJoinable()) {
+            audio_thread_->Join();
+            audio_thread_.reset();
+            LOGI("Audio thread exit.");
+        }
     }
 
 }

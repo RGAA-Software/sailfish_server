@@ -13,11 +13,8 @@
 
 namespace rgaa {
 
-    WSServer::WSServer(const std::shared_ptr<Context>& ctx, const std::string& ip, int port) {
-        this->context_ = ctx;
-        this->ip_ = ip;
-        this->port_ = port;
-        msg_processor_ = std::make_shared<MessageProcessor>(ctx);
+    WSServer::WSServer(const std::shared_ptr<Context>& ctx, const std::shared_ptr<MessageProcessor>& processor, const std::string& ip, int port)
+        : Connection(ctx, processor, ip, port) {
     }
 
     WSServer::~WSServer() {
@@ -69,8 +66,14 @@ namespace rgaa {
     }
 
     void WSServer::Exit() {
+        if (ws_server_) {
+            ws_server_->stop();
+            ws_server_.reset();
+            LOGI("WS Server exit");
+        }
         if (ws_thread_ && ws_thread_->IsJoinable()) {
             ws_thread_->Join();
+            LOGI("WS Server thread exit");
         }
     }
 

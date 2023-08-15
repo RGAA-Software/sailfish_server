@@ -5,6 +5,7 @@
 #include "rgaa_common/RDump.h"
 #include "rgaa_common/RLog.h"
 #include "ui/Workspace.h"
+#include "context/Context.h"
 
 #include <QApplication>
 
@@ -18,11 +19,10 @@ int main(int argc, char** argv) {
 
     Logger::Init("sailfish_server.log", false);
 
-//    auto app = std::make_shared<Application>();
-//    app->Init();
-//    app->Start();
+    auto context = std::make_shared<Context>();
+    context->Init();
 
-    Workspace workspace(nullptr, nullptr);
+    Workspace workspace(context, nullptr);
     workspace.Show();
 
     return QApplication::exec();

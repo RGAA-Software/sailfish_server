@@ -46,8 +46,8 @@ namespace rgaa {
         return true;
     }
 
-    GraphicsCapture::GraphicsCapture(const std::shared_ptr<Context> &ctx, const CaptureResultType &crt) : Capture(ctx,
-                                                                                                                  crt) {
+    GraphicsCapture::GraphicsCapture(const std::shared_ptr<Context> &ctx, const CaptureResultType &crt)
+    : Capture(ctx, crt) {
         //void* handle, const std::string& name
     //    if (type == WindowCaptureType::kWindow) {
     //        HWND window = (HWND)handle;
@@ -136,17 +136,21 @@ namespace rgaa {
     //    return true;
     //}
 
-    void GraphicsCapture::Exit() {
-        auto expected = false;
-        if (m_closed.compare_exchange_strong(expected, true)) {
-            m_session.Close();
-            m_framePool.Close();
-
-            m_swapChain = nullptr;
-            m_framePool = nullptr;
-            m_session = nullptr;
-            m_item = nullptr;
+    void GraphicsCapture::Exit(){
+        exit_ = true;
+        while(!exit_already_processed_) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
+        m_session.Close();
+        m_framePool.Close();
+
+        m_device.Close();
+
+        m_framePool = nullptr;
+        m_session = nullptr;
+        m_item = nullptr;
+
+        LOGI("GraphicsCapture exit.");
     }
 
     void GraphicsCapture::ResizeSwapChain() {
@@ -184,6 +188,10 @@ namespace rgaa {
     static int fps = 0;
 
     void GraphicsCapture::OnFrameArrived(winrt::Direct3D11CaptureFramePool const &sender, winrt::IInspectable const &) {
+        if (exit_) {
+            exit_already_processed_ = true;
+            return;
+        }
         auto swapChainResizedToFrame = false;
 
         fps++;
@@ -344,6 +352,10 @@ namespace rgaa {
 
         if (swapChainResizedToFrame) {
             m_framePool.Recreate(m_device, m_pixelFormat, 2, m_lastSize);
+        }
+
+        if (exit_) {
+            exit_already_processed_ = true;
         }
     }
 

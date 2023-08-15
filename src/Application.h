@@ -18,14 +18,16 @@ namespace rgaa {
     class IAudioCapture;
     class Thread;
     class AudioEncoder;
+    class Connection;
 
     class Application {
     public:
-        Application();
+        explicit Application(const std::shared_ptr<Context>& ctx);
         ~Application();
 
         void Init();
         void Start();
+        void Exit();
 
     private:
 
@@ -40,11 +42,11 @@ namespace rgaa {
         std::shared_ptr<Capture> capture_ = nullptr;
         std::map<int, std::shared_ptr<VideoEncoder>> encoders_;
 
-        std::shared_ptr<WSServer> ws_server_ = nullptr;
-
         std::shared_ptr<Thread> audio_thread_ = nullptr;
         std::shared_ptr<IAudioCapture> audio_capture_ = nullptr;
         std::shared_ptr<AudioEncoder> audio_encoder_ = nullptr;
+
+        std::shared_ptr<Connection> connection_ = nullptr;
 
         Settings* settings_ = nullptr;
 

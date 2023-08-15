@@ -78,4 +78,13 @@ namespace rgaa
 
         return frames;
 	}
+
+    void AudioEncoder::Exit() {
+        if (encoder) {
+            encoder->ResetState();
+            encoder.reset();
+
+            LOGI("Audio encoder exit.");
+        }
+    }
 }
