@@ -68,11 +68,11 @@ namespace rgaa {
         StartAudioCapturing();
         StartVideoCapturing();
 
-        auto msg_queue = context_->GetMessageQueue();
-        std::shared_ptr<Message> msg = nullptr;
-        while ((msg = msg_queue->Peek()) != nullptr) {
-            std::cout << "msg : " << msg->code << std::endl;
-        }
+//        auto msg_queue = context_->GetMessageQueue();
+//        std::shared_ptr<Message> msg = nullptr;
+//        while ((msg = msg_queue->Peek()) != nullptr) {
+//            std::cout << "msg : " << msg->code << std::endl;
+//        }
     }
 
     void Application::StartVideoCapturing() {
