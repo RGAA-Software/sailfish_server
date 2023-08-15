@@ -19,7 +19,7 @@ namespace rgaa {
     public:
         static std::string MakeVideoConfigSync(EncodeType type, int width, int height);
         static std::string MakeAudioConfigSync(int samples, int channels);
-        static std::string MakeAudioFrameSync(const std::shared_ptr<Data>& data, int frame_size);
+        static std::string MakeAudioFrameSync(const std::shared_ptr<Data>& data, int frame_size, int samples, int channels);
 
     };
 

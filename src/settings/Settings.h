@@ -40,7 +40,7 @@ namespace rgaa {
 
         EncodeType encode_type_ = EncodeType::kH264;
         CaptureMonitorType capture_monitor_type_ = CaptureMonitorType::kAll;
-        CaptureAPI capture_api_ = CaptureAPI::kDesktopDuplication;
+        CaptureAPI capture_api_ = CaptureAPI::kWinGraphicsCapture;
     };
 
 }

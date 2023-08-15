@@ -39,7 +39,7 @@ namespace rgaa {
         return message->SerializeAsString();
     }
 
-    std::string MessageMaker::MakeAudioFrameSync(const std::shared_ptr<Data>& data, int frame_size) {
+    std::string MessageMaker::MakeAudioFrameSync(const std::shared_ptr<Data>& data, int frame_size, int samples, int channels) {
         auto net_msg = std::make_shared<NetMessage>();
         net_msg->set_type(MessageType::kAudioFrame);
         net_msg->set_send_time(GetCurrentTimestamp());
@@ -48,6 +48,8 @@ namespace rgaa {
 
         audio_frame->set_data(data->AsString());
         audio_frame->set_frame_size(frame_size);
+        audio_frame->set_samples(samples);
+        audio_frame->set_channels(channels);
 
         net_msg->set_allocated_audio_frame(audio_frame);
 
