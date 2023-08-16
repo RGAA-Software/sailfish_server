@@ -8,6 +8,7 @@
 #include "messages.pb.h"
 #include "controller/EventReplayer.h"
 #include "rgaa_common/RLog.h"
+#include "rgaa_common/RTime.h"
 
 namespace rgaa {
 
@@ -36,13 +37,18 @@ namespace rgaa {
         else if (message->has_stop_recording()) {
             auto& payload = message->stop_recording();
             context_->StopApplication();
+            return;
         }
         else if (message->has_mouse_info() || message->has_keyboard_info()) {
             replayer_->Replay(message);
             return;
         }
-
-
+        else if (message->has_heart_beat()) {
+            auto time = GetCurrentTimestamp();
+            auto idx = message->heart_beat().index();
+            context_->UpdateHeartBeat(time, idx);
+            return;
+        }
     }
 
 }

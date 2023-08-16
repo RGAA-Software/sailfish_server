@@ -32,6 +32,8 @@ namespace rgaa {
         void StartApplication(bool audio);
         void StopApplication();
 
+        void UpdateHeartBeat(uint64_t time, uint64_t index);
+
         void PostNetworkBinaryMessage(const std::string& msg);
         void PostNetworkBinaryMessage(const std::shared_ptr<Data>& data);
         void PostNetworkTextMessage(const std::string& msg);
@@ -44,6 +46,8 @@ namespace rgaa {
         Settings* settings_ = nullptr;
         std::shared_ptr<Application> app_ = nullptr;
 
+        uint64_t heart_beat_time_ = 0;
+        uint64_t heart_beat_index_ = 0;
     };
 
     using ContextPtr = std::shared_ptr<Context>;

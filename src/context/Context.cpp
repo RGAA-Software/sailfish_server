@@ -81,6 +81,11 @@ namespace rgaa {
         }
     }
 
+    void Context::UpdateHeartBeat(uint64_t time, uint64_t index) {
+        heart_beat_time_ = time;
+        heart_beat_index_ = index;
+    }
+
     void Context::PostNetworkBinaryMessage(const std::string& msg) {
         if (connection_) {
             connection_->PostBinaryMessage(msg);
