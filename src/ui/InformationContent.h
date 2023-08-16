@@ -12,11 +12,17 @@ namespace rgaa {
     class InformationContent : public AppContent {
     public:
 
-        InformationContent(QWidget* parent = nullptr);
+        InformationContent(const std::shared_ptr<Context>& ctx, QWidget* parent = nullptr);
         ~InformationContent();
 
         void OnContentShow() override;
         void OnContentHide() override;
+
+    private:
+
+        QCheckBox* cb_server_mode_ = nullptr;
+        QCheckBox* cb_relay_mode_ = nullptr;
+
     };
 
 }

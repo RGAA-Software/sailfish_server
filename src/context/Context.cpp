@@ -10,6 +10,7 @@
 #include "network/MessageProcessor.h"
 #include "rgaa_common/RData.h"
 #include "rgaa_common/RLog.h"
+#include "Application.h"
 
 namespace rgaa {
 
@@ -18,7 +19,9 @@ namespace rgaa {
     }
 
     Context::~Context() {
-
+        if (connection_) {
+            connection_->Exit();
+        }
     }
 
     void Context::Init() {
@@ -26,14 +29,7 @@ namespace rgaa {
         auto self = shared_from_this();
         msg_processor_ = std::make_shared<MessageProcessor>(self);
 
-        if (settings_->GetConnectionMode() == ConnectionMode::kDirect) {
-            LOGI("Running network mode : {}, port : {}", (int)settings_->GetConnectionMode(), settings_->GetListenPort());
-            connection_ = std::make_shared<WSServer>(self, msg_processor_, "0.0.0.0", settings_->GetListenPort());
-        }
-        else if (settings_->GetConnectionMode() == ConnectionMode::kRelay) {
-
-        }
-        connection_->Start();
+        EstablishConnection();
     }
 
     std::shared_ptr<MessageQueue> Context::GetMessageQueue() {
@@ -42,6 +38,47 @@ namespace rgaa {
 
     std::shared_ptr<Connection> Context::GetConnection() {
         return connection_;
+    }
+
+    void Context::EstablishConnection() {
+        if (connection_) {
+            connection_->Exit();
+            connection_.reset();
+        }
+
+        if (settings_->GetConnectionMode() == ConnectionMode::kDirect) {
+            LOGI("Running network mode : {}, port : {}", (int)settings_->GetConnectionMode(), settings_->GetListenPort());
+            connection_ = std::make_shared<WSServer>(shared_from_this(), msg_processor_, "0.0.0.0", settings_->GetListenPort());
+        }
+        else if (settings_->GetConnectionMode() == ConnectionMode::kRelay) {
+            LOGI("Relay not impl now.");
+        }
+
+        if (connection_) {
+            connection_->Start();
+        }
+    }
+
+    void Context::StartApplication(bool audio) {
+//        if (app_) {
+//            LOGI("App exit, return.");
+//            return;
+//        }
+
+        StopApplication();
+
+        app_ = std::make_shared<Application>(shared_from_this(), audio);
+        app_->Start();
+        LOGI("Start application...");
+    }
+
+    void Context::StopApplication() {
+        if (app_) {
+            app_->Exit();
+            app_.reset();
+            app_ = nullptr;
+            LOGI("Stop application...");
+        }
     }
 
     void Context::PostNetworkBinaryMessage(const std::string& msg) {

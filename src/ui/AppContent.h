@@ -10,17 +10,27 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QCheckBox>
 
 namespace rgaa {
+
+    class Context;
+    class Settings;
 
     class AppContent : public QWidget {
     public:
 
-        explicit AppContent(QWidget* parent = nullptr);
+        explicit AppContent(const std::shared_ptr<Context>& ctx, QWidget* parent = nullptr);
         ~AppContent();
 
         virtual void OnContentShow();
         virtual void OnContentHide();
+
+    protected:
+
+        std::shared_ptr<Context> context_ = nullptr;
+
+        Settings* settings_ = nullptr;
 
     };
 

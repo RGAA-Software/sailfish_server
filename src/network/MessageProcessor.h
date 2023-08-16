@@ -24,6 +24,7 @@ namespace rgaa {
     private:
 
         std::shared_ptr<EventReplayer> replayer_ = nullptr;
+        std::shared_ptr<Context> context_ = nullptr;
 
     };
 

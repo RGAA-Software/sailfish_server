@@ -15,6 +15,7 @@ namespace rgaa {
     class Connection;
     class Settings;
     class MessageProcessor;
+    class Application;
 
     class Context : public std::enable_shared_from_this<Context> {
     public:
@@ -26,6 +27,10 @@ namespace rgaa {
 
         std::shared_ptr<MessageQueue> GetMessageQueue();
         std::shared_ptr<Connection> GetConnection();
+        void EstablishConnection();
+
+        void StartApplication(bool audio);
+        void StopApplication();
 
         void PostNetworkBinaryMessage(const std::string& msg);
         void PostNetworkBinaryMessage(const std::shared_ptr<Data>& data);
@@ -37,6 +42,8 @@ namespace rgaa {
         std::shared_ptr<Connection> connection_ = nullptr;
         std::shared_ptr<MessageProcessor> msg_processor_ = nullptr;
         Settings* settings_ = nullptr;
+        std::shared_ptr<Application> app_ = nullptr;
+
     };
 
     using ContextPtr = std::shared_ptr<Context>;

@@ -36,27 +36,25 @@
 
 namespace rgaa {
 
-    Application::Application(const std::shared_ptr<Context>& ctx) {
+    Application::Application(const std::shared_ptr<Context>& ctx, bool audio) {
         context_ = ctx;
         connection_ = context_->GetConnection();
+        audio_enabled_ = audio;
     }
 
     Application::~Application() {
 
     }
 
-    void Application::Init() {
+    void Application::Start() {
         settings_ = Settings::Instance();
         settings_->LoadSettings();
 
         capture_ = CaptureFactory::MakeCapture(context_);
 
-
-    }
-
-    void Application::Start() {
-
-        StartAudioCapturing();
+        if (audio_enabled_) {
+            StartAudioCapturing();
+        }
         StartVideoCapturing();
 
 //        auto msg_queue = context_->GetMessageQueue();

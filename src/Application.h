@@ -22,10 +22,9 @@ namespace rgaa {
 
     class Application {
     public:
-        explicit Application(const std::shared_ptr<Context>& ctx);
+        explicit Application(const std::shared_ptr<Context>& ctx, bool audio);
         ~Application();
 
-        void Init();
         void Start();
         void Exit();
 
@@ -49,6 +48,8 @@ namespace rgaa {
         std::shared_ptr<Connection> connection_ = nullptr;
 
         Settings* settings_ = nullptr;
+
+        bool audio_enabled_ = false;
 
     };
 

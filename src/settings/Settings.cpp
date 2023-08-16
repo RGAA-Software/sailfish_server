@@ -29,6 +29,10 @@ namespace rgaa {
         return listen_port_;
     }
 
+    void Settings::SetConnectionMode(const ConnectionMode& mode) {
+        connection_mode_ = mode;
+    }
+
     ConnectionMode Settings::GetConnectionMode() {
         return connection_mode_;
     }

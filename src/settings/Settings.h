@@ -44,6 +44,7 @@ namespace rgaa {
         CaptureAPI GetCaptureAPI();
 
         int GetListenPort();
+        void SetConnectionMode(const ConnectionMode& mode);
         ConnectionMode GetConnectionMode();
 
         std::string GetRelayHost();

@@ -7,10 +7,12 @@
 #include "context/Context.h"
 #include "messages.pb.h"
 #include "controller/EventReplayer.h"
+#include "rgaa_common/RLog.h"
 
 namespace rgaa {
 
     MessageProcessor::MessageProcessor(const std::shared_ptr<Context>& ctx) {
+        context_ = ctx;
         replayer_ = std::make_shared<EventReplayer>(ctx);
     }
 
@@ -25,7 +27,17 @@ namespace rgaa {
             return;
         }
 
-        if (message->has_mouse_info() || message->has_keyboard_info()) {
+        if (message->has_start_recording()) {
+            LOGI("ProcessMessage, will process StartRecording");
+            auto& payload = message->start_recording();
+            context_->StartApplication(payload.audio());
+            return;
+        }
+        else if (message->has_stop_recording()) {
+            auto& payload = message->stop_recording();
+            context_->StopApplication();
+        }
+        else if (message->has_mouse_info() || message->has_keyboard_info()) {
             replayer_->Replay(message);
             return;
         }

@@ -4,10 +4,13 @@
 
 #include "AppContent.h"
 
+#include "settings/Settings.h"
+
 namespace rgaa {
 
-    AppContent::AppContent(QWidget* parent) : QWidget(parent) {
-
+    AppContent::AppContent(const std::shared_ptr<Context>& ctx, QWidget* parent) : QWidget(parent) {
+        context_ = ctx;
+        settings_ = Settings::Instance();
     }
 
     AppContent::~AppContent() {

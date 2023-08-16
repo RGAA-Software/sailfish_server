@@ -59,12 +59,12 @@ namespace rgaa {
         // 2. app content
         content_widget_ = new QStackedWidget(this);
         // 2.1 information
-        auto information_content = new InformationContent(this);
+        auto information_content = new InformationContent(context_, this);
         content_widget_->addWidget(information_content);
         contents_.push_back(information_content);
 
         // 2.2 settings
-        auto settings_content = new SettingsContent(this);
+        auto settings_content = new SettingsContent(context_, this);
         content_widget_->addWidget(settings_content);
         contents_.push_back(settings_content);
 
