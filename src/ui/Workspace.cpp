@@ -12,6 +12,11 @@
 
 #include "Application.h"
 #include "context/Context.h"
+#include "AppMenu.h"
+#include "rgaa_common/RLog.h"
+#include "AppContent.h"
+#include "InformationContent.h"
+#include "SettingsContent.h"
 
 namespace rgaa {
 
@@ -25,37 +30,51 @@ namespace rgaa {
     Workspace::~Workspace() {}
 
     void Workspace::Show() {
-        resize(960, 540);
+        setFixedSize(960, 540);
         show();
     }
 
     void Workspace::CreateLayout() {
         auto root_widget = new QWidget(this);
-        auto root_layout = new QVBoxLayout(this);
+        auto root_layout = new QHBoxLayout();
         root_layout->setSpacing(0);
         root_layout->setContentsMargins(0,0,0,0);
 
         // 1. app menu
-        auto app_menu = new QPushButton(this);
-        app_menu->setText("Start");
-        root_layout->addWidget(app_menu);
-        connect(app_menu, &QPushButton::clicked, this, [=, this]() {
-            application_ = std::make_shared<Application>(context_);
-            application_->Init();
-            application_->Start();
+        std::vector<QString> menus = {
+                tr("Information"),
+                tr("Settings"),
+        };
+        app_menu_ = new AppMenu(menus, this);
+        app_menu_->SetOnItemClickedCallback([this](const QString& name, int idx) {
+            content_widget_->setCurrentIndex(idx);
         });
+        root_layout->addWidget(app_menu_);
+//        connect(app_menu, &QPushButton::clicked, this, [=, this]() {
+//            application_ = std::make_shared<Application>(context_);
+//            application_->Init();
+//            application_->Start();
+//        });
 
-        // 2. stream list
-        auto stream_list = new QPushButton(this);
-        stream_list->setText("Stop");
-        root_layout->addWidget(stream_list);
-        connect(stream_list, &QPushButton::clicked, this, [=, this]() {
-            application_->Exit();
-            application_.reset();
-        });
+        // 2. app content
+        content_widget_ = new QStackedWidget(this);
+        // 2.1 information
+        auto information_content = new InformationContent(this);
+        content_widget_->addWidget(information_content);
+        contents_.push_back(information_content);
+
+        // 2.2 settings
+        auto settings_content = new SettingsContent(this);
+        content_widget_->addWidget(settings_content);
+        contents_.push_back(settings_content);
+
+        root_layout->addWidget(content_widget_);
 
         root_widget->setLayout(root_layout);
         setCentralWidget(root_widget);
+
+        //
+        content_widget_->setCurrentIndex(0);
     }
 
     void Workspace::LoadStyle(const std::string &name) {

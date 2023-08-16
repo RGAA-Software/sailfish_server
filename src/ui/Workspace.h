@@ -9,13 +9,17 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QPushButton>
+#include <QStackedWidget>
 
 #include <memory>
+#include <vector>
 
 namespace rgaa {
 
     class Context;
     class Application;
+    class AppMenu;
+    class AppContent;
 
     class Workspace : public QMainWindow {
     public:
@@ -36,6 +40,10 @@ namespace rgaa {
         std::shared_ptr<Context> context_ = nullptr;
         std::shared_ptr<Application> application_ = nullptr;
 
+        AppMenu* app_menu_ = nullptr;
+
+        QStackedWidget* content_widget_ = nullptr;
+        std::vector<AppContent*> contents_;
     };
 
 }
