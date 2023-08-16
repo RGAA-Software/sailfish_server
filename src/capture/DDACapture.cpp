@@ -41,23 +41,7 @@ namespace rgaa {
     }
 
     DDACapture::~DDACapture() {
-        if (d3d_device) {
-            d3d_device->Release();
-        }
 
-        if (d3d_device_context) {
-            d3d_device_context->Release();
-        }
-
-        if (cpu_side_texture_) {
-            cpu_side_texture_->Release();
-        }
-
-        for (auto& dup : output_duplications_) {
-            if (dup->duplication_) {
-                dup->duplication_->Release();
-            }
-        }
     }
 
     bool DDACapture::Init() {
@@ -164,6 +148,11 @@ namespace rgaa {
     bool DDACapture::CaptureNextFrame() {
         Capture::CaptureNextFrame();
 
+        if (exit_) {
+            exit_already_processed_ = true;
+            return false;
+        }
+
         auto capture_monitor_type = settings_->GetCaptureMonitorType();
         if (capture_monitor_type == CaptureMonitorType::kAll) {
             for (const auto& out_dup : output_duplications_) {
@@ -179,12 +168,35 @@ namespace rgaa {
             auto out_dup = output_duplications_.at(target_monitor_idx);
             CaptureNextFrameInternal(out_dup);
         }
-
-        return false;
+        return true;
     }
 
     void DDACapture::Exit() {
         Capture::Exit();
+
+        LOGI("capture exit : {}", exit_);
+        while (!exit_already_processed_) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+
+        for (auto& dup : output_duplications_) {
+            if (dup->duplication_) {
+                dup->duplication_->Release();
+            }
+        }
+
+        if (d3d_device_context) {
+            d3d_device_context->Release();
+        }
+
+        if (d3d_device) {
+            d3d_device->Release();
+        }
+
+        if (cpu_side_texture_) {
+            cpu_side_texture_->Release();
+        }
+        LOGI("DDACapture exit...");
     }
 
     int DDACapture::CaptureNextFrameInternal(const std::shared_ptr<OutputDuplication>& out_dup) {

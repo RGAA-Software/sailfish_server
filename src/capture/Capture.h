@@ -7,6 +7,8 @@
 
 #include <memory>
 #include <functional>
+#include <mutex>
+#include <condition_variable>
 
 namespace rgaa {
 
@@ -42,6 +44,8 @@ namespace rgaa {
 
         bool exit_ = false;
         bool exit_already_processed_ = false;
+        std::mutex exit_cv_mtx_;
+        std::condition_variable exit_cv_;
 
         int capture_monitor_idx_ = 0;
 

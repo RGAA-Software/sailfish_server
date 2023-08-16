@@ -10,6 +10,7 @@
 #include "network/MessageProcessor.h"
 #include "rgaa_common/RData.h"
 #include "rgaa_common/RLog.h"
+#include "rgaa_common/RTime.h"
 #include "Application.h"
 
 namespace rgaa {
@@ -22,6 +23,11 @@ namespace rgaa {
         if (connection_) {
             connection_->Exit();
         }
+        if (!timer_ids_.empty() && timer_) {
+            for (const auto& tid : timer_ids_) {
+                timer_->remove(tid);
+            }
+        }
     }
 
     void Context::Init() {
@@ -29,7 +35,17 @@ namespace rgaa {
         auto self = shared_from_this();
         msg_processor_ = std::make_shared<MessageProcessor>(self);
 
+        InitTimers();
+
         EstablishConnection();
+    }
+
+    void Context::InitTimers() {
+        timer_ = std::make_shared<Timer>();
+        auto timer_1s_id = timer_->add(std::chrono::milliseconds(10), [=, this](rgaa::timer_id){
+            CheckHeartBeat();
+        }, std::chrono::seconds(1));
+        timer_ids_.push_back(timer_1s_id);
     }
 
     std::shared_ptr<MessageQueue> Context::GetMessageQueue() {
@@ -60,11 +76,11 @@ namespace rgaa {
     }
 
     void Context::StartApplication(bool audio) {
-//        if (app_) {
-//            LOGI("App exit, return.");
-//            return;
-//        }
-
+        if (app_) {
+            LOGI("App exit, return.");
+            return;
+        }
+        LOGI("111");
         StopApplication();
 
         app_ = std::make_shared<Application>(shared_from_this(), audio);
@@ -74,10 +90,19 @@ namespace rgaa {
 
     void Context::StopApplication() {
         if (app_) {
+            LOGI("222");
             app_->Exit();
             app_.reset();
             app_ = nullptr;
             LOGI("Stop application...");
+        }
+    }
+
+    void Context::CheckHeartBeat() {
+        auto current_time = GetCurrentTimestamp();
+        if (current_time - heart_beat_time_ > 10000 && heart_beat_time_ > 0) {
+            // close the application
+            StopApplication();
         }
     }
 

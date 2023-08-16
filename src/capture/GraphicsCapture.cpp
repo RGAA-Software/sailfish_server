@@ -138,9 +138,19 @@ namespace rgaa {
 
     void GraphicsCapture::Exit(){
         exit_ = true;
-        while(!exit_already_processed_) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
+
+        std::thread t([=]() {
+            LOGI("before wait...");
+            std::unique_lock<std::mutex> lock(exit_cv_mtx_);
+            exit_cv_.wait(lock);
+            LOGI("After wait...");
+        });
+        t.join();
+
+//        while(!exit_already_processed_) {
+//            LOGI("wait video capture exit ....");
+//            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+//        }
         m_session.Close();
         m_framePool.Close();
 
@@ -190,6 +200,7 @@ namespace rgaa {
     void GraphicsCapture::OnFrameArrived(winrt::Direct3D11CaptureFramePool const &sender, winrt::IInspectable const &) {
         if (exit_) {
             exit_already_processed_ = true;
+            exit_cv_.notify_all();
             return;
         }
         auto swapChainResizedToFrame = false;

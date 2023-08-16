@@ -50,12 +50,13 @@ namespace rgaa {
         settings_ = Settings::Instance();
         settings_->LoadSettings();
 
-        capture_ = CaptureFactory::MakeCapture(context_);
-
         if (audio_enabled_) {
             StartAudioCapturing();
         }
-        StartVideoCapturing();
+
+        //video_thread_ = std::make_shared<Thread>([=, this]() {
+            StartVideoCapturing();
+        //}, "", false);
 
 //        auto msg_queue = context_->GetMessageQueue();
 //        std::shared_ptr<Message> msg = nullptr;
@@ -65,13 +66,10 @@ namespace rgaa {
     }
 
     void Application::StartVideoCapturing() {
-        if (!capture_) {
-            return;
-        }
-
+        capture_ = CaptureFactory::MakeCapture(context_);
         bool ok = capture_->Init();
         if (!ok) {
-            std::cout << "Init capture failed !" << std::endl;
+            LOGE("Init video capture failed.");
             return;
         }
 
@@ -103,10 +101,13 @@ namespace rgaa {
             }
         });
 
-//        for (;;) {
-//            capture_->CaptureNextFrame();
-//            //std::cout << ".";
-//        }
+        if (settings_->GetCaptureAPI() == CaptureAPI::kDesktopDuplication) {
+            for (;;) {
+                if (!capture_->CaptureNextFrame()) {
+                    break;
+                }
+            }
+        }
     }
 
     std::shared_ptr<VideoEncoder> Application::GetEncoderForIndex(int dup_idx) {
@@ -167,8 +168,14 @@ namespace rgaa {
 
     void Application::Exit() {
         if (capture_) {
+            LOGI("333");
             capture_->Exit();
             capture_.reset();
+            LOGI("video capture. exit...");
+        }
+        if (video_thread_ && video_thread_->IsJoinable()) {
+            video_thread_->Join();
+            LOGI("video thread exit...");
         }
         for (auto& [k, encoder] : encoders_) {
             if (encoder) {

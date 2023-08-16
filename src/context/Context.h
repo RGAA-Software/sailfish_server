@@ -7,6 +7,9 @@
 
 #include <memory>
 #include <string>
+#include <vector>
+
+#include "rgaa_common/RTimer.h"
 
 namespace rgaa {
 
@@ -24,6 +27,7 @@ namespace rgaa {
         ~Context();
 
         void Init();
+        void InitTimers();
 
         std::shared_ptr<MessageQueue> GetMessageQueue();
         std::shared_ptr<Connection> GetConnection();
@@ -32,6 +36,7 @@ namespace rgaa {
         void StartApplication(bool audio);
         void StopApplication();
 
+        void CheckHeartBeat();
         void UpdateHeartBeat(uint64_t time, uint64_t index);
 
         void PostNetworkBinaryMessage(const std::string& msg);
@@ -48,6 +53,9 @@ namespace rgaa {
 
         uint64_t heart_beat_time_ = 0;
         uint64_t heart_beat_index_ = 0;
+
+        std::shared_ptr<Timer> timer_ = nullptr;
+        std::vector<size_t> timer_ids_;
     };
 
     using ContextPtr = std::shared_ptr<Context>;
