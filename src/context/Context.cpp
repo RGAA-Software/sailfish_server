@@ -99,21 +99,15 @@ namespace rgaa {
         app_thread_ = std::make_shared<Thread>([=, this]() {
             app_ = std::make_shared<Application>(shared_from_this(), audio);
             app_->Start();
-            LOGI("after Start application...");
+            LOGI("Application exit...");
         }, "", false);
     }
 
     void Context::StopApplication() {
-//        auto msg = std::make_shared<Message>();
-//        msg->code = -1;
-//        msg_queue_->Queue(msg);
-
         if (app_) {
-            LOGI("222");
             app_->Exit();
             app_.reset();
             app_ = nullptr;
-            LOGI("Stop application...");
         }
         if (app_thread_ && app_thread_->IsJoinable()) {
             app_thread_->Join();

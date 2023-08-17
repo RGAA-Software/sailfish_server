@@ -18,6 +18,7 @@
 #include "rgaa_common/RLog.h"
 #include "rgaa_common/RCloser.h"
 #include "rgaa_common/RTime.h"
+#include "context/Context.h"
 
 #include "CursorCapture.h"
 
@@ -148,6 +149,11 @@ namespace rgaa {
     bool DDACapture::CaptureNextFrame() {
         Capture::CaptureNextFrame();
 
+        if (!context_->HasConnectedPeer()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(17));
+            return true;
+        }
+
         if (exit_) {
             exit_already_processed_ = true;
             return false;
@@ -174,29 +180,33 @@ namespace rgaa {
     void DDACapture::Exit() {
         Capture::Exit();
 
-        LOGI("capture exit : {}", exit_);
         int wait_times = 0;
         while (!exit_already_processed_ && wait_times < 5) {
             wait_times++;
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
+        LOGI("DDA exit [CaptureNextFrame]...");
 
         for (auto& dup : output_duplications_) {
             if (dup->duplication_) {
                 dup->duplication_->Release();
             }
         }
+        LOGI("Duplications released...");
 
         if (d3d_device_context) {
             d3d_device_context->Release();
+            LOGI("D3D device context released...");
         }
 
         if (d3d_device) {
             d3d_device->Release();
+            LOGI("D3D device released...");
         }
 
         if (cpu_side_texture_) {
             cpu_side_texture_->Release();
+            LOGI("D3D staging texture released...");
         }
         LOGI("DDACapture exit...");
     }

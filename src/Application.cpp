@@ -55,17 +55,6 @@ namespace rgaa {
         }
 
         StartVideoCapturing();
-
-//        LOGI("After StartVideoCapturing....");
-//        auto msg_queue = context_->GetMessageQueue();
-//        std::shared_ptr<Message> msg = nullptr;
-//        while ((msg = msg_queue->Peek()) != nullptr) {
-//            if (msg->code == -1) {
-//                LOGI("msg : -1, will exit.");
-//                break;
-//            }
-//        }
-//        LOGI("After message Peek...");
     }
 
     void Application::StartVideoCapturing() {
@@ -106,10 +95,12 @@ namespace rgaa {
 
         if (settings_->GetCaptureAPI() == CaptureAPI::kDesktopDuplication) {
             for (;;) {
-                if (!capture_->CaptureNextFrame()) {
+                if (!capture_ || !capture_->CaptureNextFrame()) {
                     break;
                 }
             }
+
+            capture_loop_exit_ = true;
         }
     }
 
@@ -171,33 +162,35 @@ namespace rgaa {
 
     void Application::Exit() {
         if (capture_) {
-            LOGI("333");
             capture_->Exit();
             capture_.reset();
-            LOGI("video capture. exit...");
+            LOGI("Video capture released...");
         }
         if (video_thread_ && video_thread_->IsJoinable()) {
             video_thread_->Join();
-            LOGI("video thread exit...");
+            LOGI("Video thread exit...");
         }
         for (auto& [k, encoder] : encoders_) {
             if (encoder) {
                 encoder->Exit();
                 encoder.reset();
             }
+            LOGI("Encoders released...");
         }
         if (audio_capture_) {
             audio_capture_->Pause();
             audio_capture_->Stop();
             audio_capture_.reset();
+            LOGI("Audio capture released...");
         }
         if (audio_encoder_) {
             audio_encoder_->Exit();
+            LOGI("Audio encoder release...");
         }
         if (audio_thread_ && audio_thread_->IsJoinable()) {
             audio_thread_->Join();
             audio_thread_.reset();
-            LOGI("Audio thread exit.");
+            LOGI("Audio thread exit...");
         }
 
     }
