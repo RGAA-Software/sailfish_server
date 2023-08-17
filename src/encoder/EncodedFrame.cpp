@@ -40,6 +40,9 @@ namespace rgaa {
         video_frame->set_width(width_);
         video_frame->set_height(height_);
 
+        // 6. dup index
+        video_frame->set_dup_idx(dup_idx_);
+
         net_msg->set_allocated_video_frame(video_frame);
         return net_msg;
     }

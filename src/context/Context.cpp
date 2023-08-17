@@ -4,6 +4,7 @@
 
 #include "Context.h"
 
+#include "Message.h"
 #include "MessageQueue.h"
 #include "network/WSServer.h"
 #include "settings/Settings.h"
@@ -11,12 +12,16 @@
 #include "rgaa_common/RData.h"
 #include "rgaa_common/RLog.h"
 #include "rgaa_common/RTime.h"
+#include "rgaa_common/RThread.h"
 #include "Application.h"
+#include "encoder/EncoderChecker.h"
+#include "messages.pb.h"
 
 namespace rgaa {
 
     Context::Context() {
         settings_ = Settings::Instance();
+        encoder_checker_ = std::make_shared<EncoderChecker>();
     }
 
     Context::~Context() {
@@ -31,9 +36,15 @@ namespace rgaa {
     }
 
     void Context::Init() {
+        task_thread_ = std::make_shared<Thread>("task_thread", 128);
+        task_thread_->Poll();
+
         msg_queue_ = std::make_shared<MessageQueue>();
         auto self = shared_from_this();
         msg_processor_ = std::make_shared<MessageProcessor>(self);
+
+        encoder_checker_->CheckSupportedEncoders();
+        encoder_checker_->DumpSupportedEncoders();
 
         InitTimers();
 
@@ -43,7 +54,9 @@ namespace rgaa {
     void Context::InitTimers() {
         timer_ = std::make_shared<Timer>();
         auto timer_1s_id = timer_->add(std::chrono::milliseconds(10), [=, this](rgaa::timer_id){
-            CheckHeartBeat();
+            task_thread_->Post(SimpleThreadTask::Make([=, this] () {
+                CheckHeartBeat();
+            }));
         }, std::chrono::seconds(1));
         timer_ids_.push_back(timer_1s_id);
     }
@@ -76,19 +89,25 @@ namespace rgaa {
     }
 
     void Context::StartApplication(bool audio) {
+        heart_beat_time_ = GetCurrentTimestamp();
         if (app_) {
             LOGI("App exit, return.");
             return;
         }
         LOGI("111");
-        StopApplication();
 
-        app_ = std::make_shared<Application>(shared_from_this(), audio);
-        app_->Start();
-        LOGI("Start application...");
+        app_thread_ = std::make_shared<Thread>([=, this]() {
+            app_ = std::make_shared<Application>(shared_from_this(), audio);
+            app_->Start();
+            LOGI("after Start application...");
+        }, "", false);
     }
 
     void Context::StopApplication() {
+//        auto msg = std::make_shared<Message>();
+//        msg->code = -1;
+//        msg_queue_->Queue(msg);
+
         if (app_) {
             LOGI("222");
             app_->Exit();
@@ -96,12 +115,18 @@ namespace rgaa {
             app_ = nullptr;
             LOGI("Stop application...");
         }
+        if (app_thread_ && app_thread_->IsJoinable()) {
+            app_thread_->Join();
+            LOGI("after app thread ...");
+        }
     }
 
     void Context::CheckHeartBeat() {
         auto current_time = GetCurrentTimestamp();
-        if (current_time - heart_beat_time_ > 10000 && heart_beat_time_ > 0) {
+        if (current_time - heart_beat_time_ > 5000 && heart_beat_time_ > 0) {
+            heart_beat_time_ = 0;
             // close the application
+            LOGI("Will stop application.");
             StopApplication();
         }
     }
@@ -111,22 +136,32 @@ namespace rgaa {
         heart_beat_index_ = index;
     }
 
-    void Context::PostNetworkBinaryMessage(const std::string& msg) {
-        if (connection_) {
-            connection_->PostBinaryMessage(msg);
-        }
+    void Context::PostNetworkBinaryMessage(const std::shared_ptr<NetMessage>& msg) {
+        task_thread_->Post(SimpleThreadTask::Make([=, this] () {
+            if (connection_) {
+                connection_->PostBinaryMessage(msg->SerializeAsString());
+            }
+        }));
     }
 
     void Context::PostNetworkBinaryMessage(const std::shared_ptr<Data>& data) {
-        if (connection_) {
-            connection_->PostBinaryMessage(data);
-        }
+        task_thread_->Post(SimpleThreadTask::Make([=, this]() {
+            if (connection_) {
+                connection_->PostBinaryMessage(data);
+            }
+        }));
     }
 
-    void Context::PostNetworkTextMessage(const std::string& msg) {
-        if (connection_) {
-            connection_->PostTextMessage(msg);
-        }
+    std::shared_ptr<EncoderChecker> Context::GetEncoderChecker() {
+        return encoder_checker_;
+    }
+
+    bool Context::HasConnectedPeer() {
+        return connection_ && connection_->GetConnectionPeerCount() > 0;
+    }
+
+    void Context::PostTask(std::function<void()>&& task) {
+        task_thread_->Post(SimpleThreadTask::Make(std::move(task)));
     }
 
 }

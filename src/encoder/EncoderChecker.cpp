@@ -9,7 +9,16 @@
 
 namespace rgaa {
 
+    EncoderChecker::EncoderChecker() {
+
+    }
+
+    EncoderChecker::~EncoderChecker() {
+
+    }
+
     void EncoderChecker::CheckSupportedEncoders() {
+        supported_encoders_.clear();
         // 1. check ffmpeg
         std::map<std::string, std::string> encoder_names = {
             {"libx264", "Software H264"},

@@ -37,10 +37,8 @@ namespace rgaa {
     class EncoderChecker {
     public:
 
-        static EncoderChecker* Instance() {
-            static EncoderChecker ec;
-            return &ec;
-        }
+        EncoderChecker();
+        ~EncoderChecker();
 
         void CheckSupportedEncoders();
         std::vector<std::shared_ptr<SupportedEncoder>> GetSupportedEncoders();

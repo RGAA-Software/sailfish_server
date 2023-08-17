@@ -18,7 +18,7 @@ namespace rgaa {
     public:
 
         static std::shared_ptr<VideoEncoder> MakeEncoder(const std::shared_ptr<Context>& ctx, int dup_idx, int width, int height);
-        static std::shared_ptr<SupportedEncoder> SelectEncoder();
+        static std::shared_ptr<SupportedEncoder> SelectEncoder(const std::shared_ptr<Context>& ctx);
     };
 
 }

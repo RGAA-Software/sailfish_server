@@ -175,7 +175,9 @@ namespace rgaa {
         Capture::Exit();
 
         LOGI("capture exit : {}", exit_);
-        while (!exit_already_processed_) {
+        int wait_times = 0;
+        while (!exit_already_processed_ && wait_times < 5) {
+            wait_times++;
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
 
@@ -313,7 +315,7 @@ namespace rgaa {
 
             //LOGI("Captured....");
 
-            if (captured_cbk_) {
+            if (captured_cbk_ && !exit_) {
                 captured_cbk_(cp_frame);
             }
 

@@ -54,15 +54,18 @@ namespace rgaa {
             StartAudioCapturing();
         }
 
-        //video_thread_ = std::make_shared<Thread>([=, this]() {
-            StartVideoCapturing();
-        //}, "", false);
+        StartVideoCapturing();
 
+//        LOGI("After StartVideoCapturing....");
 //        auto msg_queue = context_->GetMessageQueue();
 //        std::shared_ptr<Message> msg = nullptr;
 //        while ((msg = msg_queue->Peek()) != nullptr) {
-//            std::cout << "msg : " << msg->code << std::endl;
+//            if (msg->code == -1) {
+//                LOGI("msg : -1, will exit.");
+//                break;
+//            }
 //        }
+//        LOGI("After message Peek...");
     }
 
     void Application::StartVideoCapturing() {
@@ -87,17 +90,17 @@ namespace rgaa {
                     auto msg = MessageMaker::MakeVideoConfigSync(settings_->GetEncodeType(),
                                                                  cp_frame->frame_width_,
                                                                  cp_frame->frame_height_);
-                    connection_->PostBinaryMessage(msg);
+                    context_->PostNetworkBinaryMessage(msg);
                 }
             }
             auto encoded_frame = encoder->Encode(cp_frame);
             if (encoded_frame && connection_) {
-                auto msg = encoded_frame->AsProtoMessageStr();
+                auto msg = encoded_frame->AsProtoMessage();
                 auto duration_from_capture = GetCurrentTimestamp() - encoded_frame->captured_time_;
                 auto duration_from_encode = GetCurrentTimestamp() - encoded_frame->encoded_time_;
                 //LOGI("Duration from capture: {}", duration_from_capture);
 
-                connection_->PostBinaryMessage(msg);
+                context_->PostNetworkBinaryMessage(msg);
             }
         });
 
@@ -139,7 +142,7 @@ namespace rgaa {
                 audio_encoder_ = std::make_shared<AudioEncoder>(context_, samples, channels, bits);
                 if (connection_) {
                     auto msg = MessageMaker::MakeAudioConfigSync(samples, channels);
-                    connection_->PostBinaryMessage(msg);
+                    context_->PostNetworkBinaryMessage(msg);
                 }
             });
 
@@ -155,7 +158,7 @@ namespace rgaa {
                     auto channels = audio_encoder_->Channels();
                     for (const auto& frame : frames) {
                         auto msg = MessageMaker::MakeAudioFrameSync(frame, frame_size, samples, channels);
-                        connection_->PostBinaryMessage(msg);
+                        context_->PostNetworkBinaryMessage(msg);
                     }
                 }
             });
@@ -196,6 +199,7 @@ namespace rgaa {
             audio_thread_.reset();
             LOGI("Audio thread exit.");
         }
+
     }
 
 }

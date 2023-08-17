@@ -37,5 +37,8 @@ namespace rgaa {
 
     }
 
+    int Connection::GetConnectionPeerCount() {
+       return 0;
+    }
 
 }

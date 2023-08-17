@@ -17,7 +17,7 @@ namespace rgaa {
     std::shared_ptr<Capture> CaptureFactory::MakeCapture(const std::shared_ptr<Context>& ctx) {
         std::shared_ptr<Capture> capture = nullptr;
         auto settings = Settings::Instance();
-        auto supported_encoder = EncoderFactory::SelectEncoder();
+        auto supported_encoder = EncoderFactory::SelectEncoder(ctx);
         if (!supported_encoder) {
             LOGE("Can't find a encoder!");
             return nullptr;

@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <functional>
+#include <mutex>
 
 typedef std::function<void()> OnPrepareCallback;
 typedef std::function<void(int samples, int channels, int bits)> OnFormatCallback;
@@ -62,6 +63,9 @@ namespace rgaa
 		OnStopCallback stop_callback{ nullptr };
 
 		AudioFileSaverPtr file_saver{ nullptr };
+
+        std::mutex exit_mtx_;
+
 	};
 
 	typedef std::shared_ptr<IAudioCapture> AudioCapturePtr;

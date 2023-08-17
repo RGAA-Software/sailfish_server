@@ -193,4 +193,9 @@ namespace rgaa {
         return nullptr;
     }
 
+    int WSServer::GetConnectionPeerCount() {
+        std::lock_guard<std::mutex> guard(session_mtx_);
+        return sessions_.size();
+    }
+
 }

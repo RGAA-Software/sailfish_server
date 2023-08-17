@@ -7,12 +7,13 @@
 #include "FFmpegEncoder.h"
 #include "settings/Settings.h"
 #include "encoder/EncoderChecker.h"
+#include "context/Context.h"
 #include "rgaa_common/RLog.h"
 
 namespace rgaa {
 
     std::shared_ptr<VideoEncoder> EncoderFactory::MakeEncoder(const std::shared_ptr<Context>& ctx, int dup_idx, int width, int height) {
-        auto supported_encoder = SelectEncoder();
+        auto supported_encoder = SelectEncoder(ctx);
         if (!supported_encoder) {
             return nullptr;
         }
@@ -27,8 +28,8 @@ namespace rgaa {
         return nullptr;
     }
 
-    std::shared_ptr<SupportedEncoder> EncoderFactory::SelectEncoder() {
-        auto supported_encoders = EncoderChecker::Instance()->GetSupportedEncoders();
+    std::shared_ptr<SupportedEncoder> EncoderFactory::SelectEncoder(const std::shared_ptr<Context>& ctx) {
+        auto supported_encoders = ctx->GetEncoderChecker()->GetSupportedEncoders();
         auto func_find_encoder_by_name = [&](const std::string& name)-> std::shared_ptr<SupportedEncoder> {
             for (const auto& encoder : supported_encoders) {
                 if (encoder->name_ == name) {

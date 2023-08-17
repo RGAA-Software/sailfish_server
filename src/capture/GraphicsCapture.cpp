@@ -17,6 +17,7 @@
 #include "messages.pb.h"
 #include "MonitorList.h"
 #include "CapturedFrame.h"
+#include "context/Context.h"
 
 namespace winrt
 {
@@ -47,7 +48,7 @@ namespace rgaa {
     }
 
     GraphicsCapture::GraphicsCapture(const std::shared_ptr<Context> &ctx, const CaptureResultType &crt)
-    : Capture(ctx, crt) {
+        : Capture(ctx, crt) {
         //void* handle, const std::string& name
     //    if (type == WindowCaptureType::kWindow) {
     //        HWND window = (HWND)handle;
@@ -85,6 +86,10 @@ namespace rgaa {
     //    if (!capture_monitor) {
     //        LOG_ERROR("Can't find screen monitor : %s", name.c_str());
     //    }
+    }
+
+    GraphicsCapture::~GraphicsCapture() {
+        LOGI("~GraphicsCapture");
     }
 
     bool GraphicsCapture::Init() {
@@ -130,30 +135,19 @@ namespace rgaa {
         return false;
     }
 
-    //bool GraphicsCapture::StartCapture() {
-    //    CheckClosed();
-    //    m_session.StartCapture();
-    //    return true;
-    //}
-
     void GraphicsCapture::Exit(){
-        exit_ = true;
+        Capture::Exit();
+        LOGI("Exit!!!");
+        std::lock_guard<std::mutex> guard(exit_mtx_);
+        int wait_times = 0;
+        while(!exit_already_processed_ && wait_times < 5) {
+            wait_times++;
+            LOGI("wait video capture exit .... {} ", wait_times);
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
 
-        std::thread t([=]() {
-            LOGI("before wait...");
-            std::unique_lock<std::mutex> lock(exit_cv_mtx_);
-            exit_cv_.wait(lock);
-            LOGI("After wait...");
-        });
-        t.join();
-
-//        while(!exit_already_processed_) {
-//            LOGI("wait video capture exit ....");
-//            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//        }
         m_session.Close();
         m_framePool.Close();
-
         m_device.Close();
 
         m_framePool = nullptr;
@@ -198,9 +192,12 @@ namespace rgaa {
     static int fps = 0;
 
     void GraphicsCapture::OnFrameArrived(winrt::Direct3D11CaptureFramePool const &sender, winrt::IInspectable const &) {
+        if (!context_->HasConnectedPeer()) {
+            return;
+        }
+
         if (exit_) {
             exit_already_processed_ = true;
-            exit_cv_.notify_all();
             return;
         }
         auto swapChainResizedToFrame = false;
@@ -290,9 +287,6 @@ namespace rgaa {
                         LOGE("Map texture failed : {0:x}", hr);
                         return;
                     }
-                    auto cpu_texture_release = Closer::Make([this]() {
-                        m_d3dContext->Unmap(shared_texture, 0);
-                    });
 
                     auto width = (int)desc.Width;
                     auto height = (int)desc.Height;
@@ -335,13 +329,20 @@ namespace rgaa {
                     cp_frame->dup_index_ = 0;
                     cp_frame->captured_time_ = captured_time;
 
-                    if (captured_cbk_) {
-                        captured_cbk_(cp_frame);
+                    {
+                        std::lock_guard<std::mutex> guard(exit_mtx_);
+                        if (captured_cbk_ && !exit_) {
+                            captured_cbk_(cp_frame);
+                        }
                     }
 
                 }
                 else if (capture_result_type_ == CaptureResultType::kTexture2D) {
 
+                }
+
+                if (m_d3dContext && shared_texture) {
+                    m_d3dContext->Unmap(shared_texture, 0);
                 }
 
     //			auto ipc_message = IPCFrameMessage::MakeEmptyMessage();

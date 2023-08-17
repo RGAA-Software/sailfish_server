@@ -27,6 +27,8 @@ namespace rgaa {
         virtual void PostBinaryMessage(const std::shared_ptr<Data>& data);
         virtual void PostBinaryMessage(const std::string& data);
 
+        virtual int GetConnectionPeerCount();
+
     protected:
 
         std::shared_ptr<Context> context_ = nullptr;

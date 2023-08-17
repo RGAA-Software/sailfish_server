@@ -60,14 +60,16 @@ namespace rgaa {
     public:
 
         WSServer(const std::shared_ptr<Context>& ctx, const std::shared_ptr<MessageProcessor>& processor, const std::string& ip, int port);
-        ~WSServer();
+        ~WSServer() override;
 
-        void Start();
-        void Exit();
+        void Start() override;
+        void Exit() override;
 
-        void PostTextMessage(const std::string& msg);
-        void PostBinaryMessage(const std::shared_ptr<Data>& data);
-        void PostBinaryMessage(const std::string& data);
+        void PostTextMessage(const std::string& msg) override;
+        void PostBinaryMessage(const std::shared_ptr<Data>& data) override;
+        void PostBinaryMessage(const std::string& data) override;
+
+        virtual int GetConnectionPeerCount() override;
 
     private:
 

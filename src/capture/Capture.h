@@ -44,8 +44,7 @@ namespace rgaa {
 
         bool exit_ = false;
         bool exit_already_processed_ = false;
-        std::mutex exit_cv_mtx_;
-        std::condition_variable exit_cv_;
+        std::mutex exit_mtx_;
 
         int capture_monitor_idx_ = 0;
 

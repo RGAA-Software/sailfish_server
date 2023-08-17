@@ -19,7 +19,7 @@ namespace rgaa {
         static bool IsGraphicsCaptureSupported();
 
         GraphicsCapture(const std::shared_ptr<Context>& ctx, const CaptureResultType& crt);
-        ~GraphicsCapture() override = default;
+        ~GraphicsCapture();
 
 		bool Init() override;
 		bool CaptureNextFrame() override;

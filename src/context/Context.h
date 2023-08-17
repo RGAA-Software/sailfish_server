@@ -19,6 +19,9 @@ namespace rgaa {
     class Settings;
     class MessageProcessor;
     class Application;
+    class Thread;
+    class EncoderChecker;
+    class NetMessage;
 
     class Context : public std::enable_shared_from_this<Context> {
     public:
@@ -33,15 +36,20 @@ namespace rgaa {
         std::shared_ptr<Connection> GetConnection();
         void EstablishConnection();
 
+        std::shared_ptr<EncoderChecker> GetEncoderChecker();
+
         void StartApplication(bool audio);
         void StopApplication();
 
         void CheckHeartBeat();
         void UpdateHeartBeat(uint64_t time, uint64_t index);
 
-        void PostNetworkBinaryMessage(const std::string& msg);
+        void PostNetworkBinaryMessage(const std::shared_ptr<NetMessage>& msg);
         void PostNetworkBinaryMessage(const std::shared_ptr<Data>& data);
-        void PostNetworkTextMessage(const std::string& msg);
+
+        void PostTask(std::function<void()>&& task);
+
+        bool HasConnectedPeer();
 
     private:
 
@@ -50,12 +58,17 @@ namespace rgaa {
         std::shared_ptr<MessageProcessor> msg_processor_ = nullptr;
         Settings* settings_ = nullptr;
         std::shared_ptr<Application> app_ = nullptr;
+        std::shared_ptr<Thread> app_thread_ = nullptr;
+        std::shared_ptr<Thread> task_thread_ = nullptr;
 
         uint64_t heart_beat_time_ = 0;
         uint64_t heart_beat_index_ = 0;
 
         std::shared_ptr<Timer> timer_ = nullptr;
         std::vector<size_t> timer_ids_;
+
+        std::shared_ptr<EncoderChecker> encoder_checker_ = nullptr;
+
     };
 
     using ContextPtr = std::shared_ptr<Context>;

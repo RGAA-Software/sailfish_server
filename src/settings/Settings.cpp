@@ -4,13 +4,10 @@
 
 #include "Settings.h"
 
-#include "encoder/EncoderChecker.h"
-
 namespace rgaa {
 
     void Settings::LoadSettings() {
-        EncoderChecker::Instance()->CheckSupportedEncoders();
-        EncoderChecker::Instance()->DumpSupportedEncoders();
+
     }
 
     EncodeType Settings::GetEncodeType() {

@@ -55,7 +55,7 @@ namespace rgaa {
 
         EncodeType encode_type_ = EncodeType::kH264;
         CaptureMonitorType capture_monitor_type_ = CaptureMonitorType::kAll;
-        CaptureAPI capture_api_ = CaptureAPI::kWinGraphicsCapture;
+        CaptureAPI capture_api_ = CaptureAPI::kDesktopDuplication;
         ConnectionMode connection_mode_ = ConnectionMode::kDirect;
         int listen_port_ = 9090;
 

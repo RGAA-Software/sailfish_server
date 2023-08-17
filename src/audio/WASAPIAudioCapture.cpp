@@ -166,12 +166,13 @@ namespace rgaa
 
                 LONG bytes_to_write = numFramesAvailable * pwfx->nBlockAlign;
                 if (pData && bytes_to_write > 0) {
-                    if (data_callback) {
+                    std::lock_guard<std::mutex> guard(exit_mtx_);
+                    if (data_callback && !bDone) {
                         auto data = Data::Make((char*)pData, bytes_to_write);
                         data_callback(data);
                     }
 
-                    if (split_data_callback) {
+                    if (split_data_callback && !bDone) {
                         auto left_data = Data::Make(nullptr, bytes_to_write / 2);
                         auto right_data = Data::Make(nullptr, bytes_to_write / 2);
                         //for (int i = 0; i < bytes_to_write; i += 8) {
@@ -227,9 +228,13 @@ namespace rgaa
 	}
 
 	int WASAPIAudioCapture::Stop() {
+        std::lock_guard<std::mutex> guard(exit_mtx_);
         bDone = TRUE;
-        while(!released) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        int wait_times = 0;
+        while(!released && wait_times < 5) {
+            wait_times++;
+            LOGI("WASAPI wait exit : {}", wait_times);
+            std::this_thread::sleep_for(std::chrono::milliseconds(15));
         }
         LOGI("WASAPI audio capture released.");
         return 0;
