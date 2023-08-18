@@ -29,6 +29,9 @@ namespace rgaa {
 
         virtual int GetConnectionPeerCount();
 
+        virtual void NotifyPeerConnected();
+        virtual void NotifyPeerDisconnected();
+
     protected:
 
         std::shared_ptr<Context> context_ = nullptr;

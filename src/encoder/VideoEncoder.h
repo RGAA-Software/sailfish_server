@@ -41,6 +41,8 @@ namespace rgaa {
 
         bool insert_idr_ = false;
 
+        int peer_conn_task_id_ = -1;
+
     };
 
 }

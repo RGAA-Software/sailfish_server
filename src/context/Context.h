@@ -23,6 +23,7 @@ namespace rgaa {
     class Thread;
     class EncoderChecker;
     class NetMessage;
+    class Message;
 
     class Context : public std::enable_shared_from_this<Context> {
     public:
@@ -54,6 +55,8 @@ namespace rgaa {
 
         int RegisterMessageTask(const std::shared_ptr<MessageTask>& task);
         void RemoveMessageTask(int task_id);
+
+        void SendAppMessage(const std::shared_ptr<Message>& msg);
 
     private:
 

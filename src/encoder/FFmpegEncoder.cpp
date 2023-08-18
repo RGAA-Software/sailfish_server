@@ -125,6 +125,8 @@ namespace rgaa {
 	}
 
 	void FFmpegEncoder::Exit() {
+        VideoEncoder::Exit();
+
         if (codec_context_) {
             avcodec_close(codec_context_);
             avcodec_free_context(&codec_context_);

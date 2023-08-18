@@ -4,6 +4,9 @@
 
 #include "Connection.h"
 
+#include "context/Context.h"
+#include "AppMessages.h"
+
 namespace rgaa {
 
     Connection::Connection(const std::shared_ptr<Context> &ctx, const std::shared_ptr<MessageProcessor>& processor, const std::string &ip, int port) {
@@ -39,6 +42,14 @@ namespace rgaa {
 
     int Connection::GetConnectionPeerCount() {
        return 0;
+    }
+
+    void Connection::NotifyPeerConnected() {
+        context_->SendAppMessage(PeerConnectedMessage::Make());
+    }
+
+    void Connection::NotifyPeerDisconnected() {
+        context_->SendAppMessage(PeerDisconnectedMessage::Make());
     }
 
 }

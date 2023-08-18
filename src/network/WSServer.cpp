@@ -36,11 +36,13 @@ namespace rgaa {
 
                 ws_server_->set_open_handler([=, this](websocketpp::connection_hdl hdl) {
                     AddSession(hdl);
+                    NotifyPeerConnected();
                     LOGI("Open...");
                 });
 
                 ws_server_->set_close_handler([=, this](websocketpp::connection_hdl hdl) {
                     RemoveSession(hdl);
+                    NotifyPeerDisconnected();
                     LOGI("Close...");
                 });
 

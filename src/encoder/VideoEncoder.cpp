@@ -5,6 +5,10 @@
 #include "VideoEncoder.h"
 
 #include "settings/Settings.h"
+#include "context/Context.h"
+#include "rgaa_common/RMessageQueue.h"
+#include "rgaa_common/RLog.h"
+#include "AppMessages.h"
 
 namespace rgaa {
 
@@ -15,6 +19,11 @@ namespace rgaa {
         settings_ = Settings::Instance();
         encoder_name_ = encoder_name;
         dup_idx_ = dup_idx;
+
+        peer_conn_task_id_ = context_->RegisterMessageTask(MessageTask::Make(kPeerConnected, [=, this](auto& msg) {
+            InsertIDR();
+            LOGI("Insert IDR when PeerConnected");
+        }));
     }
 
     VideoEncoder::~VideoEncoder() {
@@ -26,7 +35,7 @@ namespace rgaa {
     }
 
     void VideoEncoder::Exit() {
-
+        context_->RemoveMessageTask(peer_conn_task_id_);
     }
 
     std::shared_ptr<EncodedVideoFrame> VideoEncoder::Encode(const std::shared_ptr<CapturedFrame>& cp_frame) {

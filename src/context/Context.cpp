@@ -182,4 +182,10 @@ namespace rgaa {
             msg_queue_->RemoveTask(task_id);
         }
     }
+
+    void Context::SendAppMessage(const std::shared_ptr<Message>& msg) {
+        if (msg_queue_) {
+            msg_queue_->Queue(msg);
+        }
+    }
 }
