@@ -4,8 +4,6 @@
 
 #include "Context.h"
 
-#include "Message.h"
-#include "MessageQueue.h"
 #include "network/WSServer.h"
 #include "settings/Settings.h"
 #include "network/MessageProcessor.h"
@@ -13,8 +11,11 @@
 #include "rgaa_common/RLog.h"
 #include "rgaa_common/RTime.h"
 #include "rgaa_common/RThread.h"
+#include "rgaa_common/RMessage.h"
+#include "rgaa_common/RMessageQueue.h"
 #include "Application.h"
 #include "encoder/EncoderChecker.h"
+
 #include "messages.pb.h"
 
 namespace rgaa {

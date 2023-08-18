@@ -1,6 +1,6 @@
 [submodule "deps/rgaa_common"]
 	path = deps/rgaa_common
-	url = https://github.com/RGAA-Software/rgaa_common.git
+	url = git@github.com:RGAA-Software/rgaa_common.git
 [submodule "deps/ext_ffmpeg_prebuild"]
 	path = deps/ext_ffmpeg_prebuild
 	url = https://github.com/RGAA-Software/ext_ffmpeg_prebuild.git

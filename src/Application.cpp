@@ -8,8 +8,6 @@
 
 #include "Application.h"
 #include "context/Context.h"
-#include "context/Message.h"
-#include "context/MessageQueue.h"
 #include "settings/Settings.h"
 #include "capture/Capture.h"
 #include "capture/DDACapture.h"
