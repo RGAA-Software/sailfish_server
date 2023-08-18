@@ -22,7 +22,10 @@ namespace rgaa {
 
         peer_conn_task_id_ = context_->RegisterMessageTask(MessageTask::Make(kPeerConnected, [=, this](auto& msg) {
             InsertIDR();
-            LOGI("Insert IDR when PeerConnected");
+        }));
+
+        idr_task_id_ = context_->RegisterMessageTask(MessageTask::Make(kMessageIDR, [=, this](auto& msg) {
+            InsertIDR();
         }));
     }
 
@@ -36,6 +39,7 @@ namespace rgaa {
 
     void VideoEncoder::Exit() {
         context_->RemoveMessageTask(peer_conn_task_id_);
+        context_->RemoveMessageTask(idr_task_id_);
     }
 
     std::shared_ptr<EncodedVideoFrame> VideoEncoder::Encode(const std::shared_ptr<CapturedFrame>& cp_frame) {
