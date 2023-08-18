@@ -27,6 +27,11 @@ namespace rgaa {
     }
 
     Context::~Context() {
+        if (!timer_ids_.empty() && timer_) {
+            for (const auto& tid : timer_ids_) {
+                timer_->remove(tid);
+            }
+        }
         if (msg_queue_) {
             msg_queue_->Exit();
         }
@@ -35,11 +40,6 @@ namespace rgaa {
         }
         if (connection_) {
             connection_->Exit();
-        }
-        if (!timer_ids_.empty() && timer_) {
-            for (const auto& tid : timer_ids_) {
-                timer_->remove(tid);
-            }
         }
     }
 
