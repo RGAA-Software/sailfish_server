@@ -14,6 +14,7 @@
 namespace rgaa {
 
     class Data;
+    class MessageTask;
     class MessageQueue;
     class Connection;
     class Settings;
@@ -51,6 +52,9 @@ namespace rgaa {
 
         bool HasConnectedPeer();
 
+        int RegisterMessageTask(const std::shared_ptr<MessageTask>& task);
+        void RemoveMessageTask(int task_id);
+
     private:
 
         std::shared_ptr<MessageQueue> msg_queue_ = nullptr;
@@ -60,6 +64,7 @@ namespace rgaa {
         std::shared_ptr<Application> app_ = nullptr;
         std::shared_ptr<Thread> app_thread_ = nullptr;
         std::shared_ptr<Thread> task_thread_ = nullptr;
+        std::shared_ptr<Thread> msg_thread_ = nullptr;
 
         uint64_t heart_beat_time_ = 0;
         uint64_t heart_beat_index_ = 0;
@@ -68,6 +73,8 @@ namespace rgaa {
         std::vector<size_t> timer_ids_;
 
         std::shared_ptr<EncoderChecker> encoder_checker_ = nullptr;
+
+        int timer_1s_task_id_ = -1;
 
     };
 

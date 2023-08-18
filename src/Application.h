@@ -52,7 +52,8 @@ namespace rgaa {
 
         bool audio_enabled_ = false;
 
-        bool capture_loop_exit_ = false;
+        int timer_1s_task_id_ = -1;
+
 
     };
 

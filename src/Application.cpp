@@ -26,6 +26,9 @@
 #include "rgaa_common/RThread.h"
 #include "encoder/AudioEncoder.h"
 #include "network/MessageMaker.h"
+#include "rgaa_common/RMessage.h"
+#include "rgaa_common/RMessageQueue.h"
+#include "AppMessages.h"
 
 #ifdef _OS_WINDOWS_
 #define WIN32_LEAN_AND_MEAN
@@ -47,6 +50,10 @@ namespace rgaa {
     void Application::Start() {
         settings_ = Settings::Instance();
         settings_->LoadSettings();
+
+        timer_1s_task_id_ = context_->RegisterMessageTask(MessageTask::Make(kMessageCodeTimer1S, [](auto& msg){
+            LOGI("Timer callback 1");
+        }));
 
         if (audio_enabled_) {
             StartAudioCapturing();
@@ -97,8 +104,6 @@ namespace rgaa {
                     break;
                 }
             }
-
-            capture_loop_exit_ = true;
         }
     }
 
@@ -159,6 +164,9 @@ namespace rgaa {
     }
 
     void Application::Exit() {
+        if (timer_1s_task_id_ != -1) {
+            context_->RemoveMessageTask(timer_1s_task_id_);
+        }
         if (capture_) {
             capture_->Exit();
             capture_.reset();

@@ -15,6 +15,7 @@
 #include "rgaa_common/RMessageQueue.h"
 #include "Application.h"
 #include "encoder/EncoderChecker.h"
+#include "AppMessages.h"
 
 #include "messages.pb.h"
 
@@ -26,6 +27,12 @@ namespace rgaa {
     }
 
     Context::~Context() {
+        if (msg_queue_) {
+            msg_queue_->Exit();
+        }
+        if (msg_thread_ && msg_thread_->IsJoinable()) {
+            msg_thread_->Join();
+        }
         if (connection_) {
             connection_->Exit();
         }
@@ -41,6 +48,10 @@ namespace rgaa {
         task_thread_->Poll();
 
         msg_queue_ = std::make_shared<MessageQueue>();
+        msg_thread_ = std::make_shared<Thread>([=, this]() {
+            msg_queue_->PollBlocked();
+        }, "msg_thread", false);
+
         auto self = shared_from_this();
         msg_processor_ = std::make_shared<MessageProcessor>(self);
 
@@ -56,6 +67,9 @@ namespace rgaa {
         timer_ = std::make_shared<Timer>();
         auto timer_1s_id = timer_->add(std::chrono::milliseconds(10), [=, this](rgaa::timer_id){
             task_thread_->Post(SimpleThreadTask::Make([=, this] () {
+                auto msg = Timer1SMessage::Make();
+                msg_queue_->Queue(msg);
+
                 CheckHeartBeat();
             }));
         }, std::chrono::seconds(1));
@@ -77,7 +91,6 @@ namespace rgaa {
         }
 
         if (settings_->GetConnectionMode() == ConnectionMode::kDirect) {
-            LOGI("Running network mode : {}, port : {}", (int)settings_->GetConnectionMode(), settings_->GetListenPort());
             connection_ = std::make_shared<WSServer>(shared_from_this(), msg_processor_, "0.0.0.0", settings_->GetListenPort());
         }
         else if (settings_->GetConnectionMode() == ConnectionMode::kRelay) {
@@ -92,10 +105,9 @@ namespace rgaa {
     void Context::StartApplication(bool audio) {
         heart_beat_time_ = GetCurrentTimestamp();
         if (app_) {
-            LOGI("App exit, return.");
+            LOGI("App already running...");
             return;
         }
-        LOGI("111");
 
         app_thread_ = std::make_shared<Thread>([=, this]() {
             app_ = std::make_shared<Application>(shared_from_this(), audio);
@@ -112,7 +124,7 @@ namespace rgaa {
         }
         if (app_thread_ && app_thread_->IsJoinable()) {
             app_thread_->Join();
-            LOGI("after app thread ...");
+            LOGI("App thread exit...");
         }
     }
 
@@ -120,7 +132,6 @@ namespace rgaa {
         auto current_time = GetCurrentTimestamp();
         if (current_time - heart_beat_time_ > 5000 && heart_beat_time_ > 0) {
             heart_beat_time_ = 0;
-            // close the application
             LOGI("Will stop application.");
             StopApplication();
         }
@@ -159,4 +170,16 @@ namespace rgaa {
         task_thread_->Post(SimpleThreadTask::Make(std::move(task)));
     }
 
+    int Context::RegisterMessageTask(const std::shared_ptr<MessageTask>& task) {
+        if (msg_queue_) {
+            return msg_queue_->RegisterTask(task);
+        }
+        return -1;
+    }
+
+    void Context::RemoveMessageTask(int task_id) {
+        if (msg_queue_) {
+            msg_queue_->RemoveTask(task_id);
+        }
+    }
 }
