@@ -32,6 +32,7 @@ namespace rgaa {
         virtual bool Init();
         virtual bool CaptureNextFrame();
         virtual void Exit();
+        virtual int GetCaptureCount();
 
         void SetOnFrameCapturedCallback(OnFrameCapturedCallback cbk);
 

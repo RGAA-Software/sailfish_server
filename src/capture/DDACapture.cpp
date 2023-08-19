@@ -211,6 +211,10 @@ namespace rgaa {
         LOGI("DDACapture exit...");
     }
 
+    int DDACapture::GetCaptureCount() {
+        return output_duplications_.size();
+    }
+
     int DDACapture::CaptureNextFrameInternal(const std::shared_ptr<OutputDuplication>& out_dup) {
         auto dxgi_dup = out_dup->duplication_;
         auto dxgi_dup_release = Closer::Make([dxgi_dup](){

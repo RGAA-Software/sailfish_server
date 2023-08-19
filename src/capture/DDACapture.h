@@ -38,6 +38,7 @@ namespace rgaa {
         bool Init() override;
         bool CaptureNextFrame() override;
         void Exit() override;
+        int GetCaptureCount() override;
 
     private:
 

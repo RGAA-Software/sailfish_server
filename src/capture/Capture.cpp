@@ -31,6 +31,10 @@ namespace rgaa {
         exit_ = true;
     }
 
+    int Capture::GetCaptureCount() {
+        return 0;
+    }
+
     void Capture::SetOnFrameCapturedCallback(OnFrameCapturedCallback cbk) {
         captured_cbk_ = std::move(cbk);
     }

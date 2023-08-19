@@ -29,6 +29,7 @@
 #include "rgaa_common/RMessage.h"
 #include "rgaa_common/RMessageQueue.h"
 #include "AppMessages.h"
+#include "messages.pb.h"
 
 #ifdef _OS_WINDOWS_
 #define WIN32_LEAN_AND_MEAN
@@ -52,7 +53,11 @@ namespace rgaa {
         settings_->LoadSettings();
 
         timer_1s_task_id_ = context_->RegisterMessageTask(MessageTask::Make(kMessageCodeTimer1S, [](auto& msg){
-            LOGI("Timer callback 1");
+
+        }));
+
+        peer_connected_msg_id_ = context_->RegisterMessageTask(MessageTask::Make(kPeerConnected, [=, this](auto& msg) {
+            SendBackConfig();
         }));
 
         if (audio_enabled_) {
@@ -69,6 +74,9 @@ namespace rgaa {
             LOGE("Init video capture failed.");
             return;
         }
+
+        // send back config
+        SendBackConfig();
 
         capture_->SetOnFrameCapturedCallback([this](const std::shared_ptr<CapturedFrame>& cp_frame){
             auto encoder = GetEncoderForIndex(cp_frame->dup_index_);
@@ -163,10 +171,26 @@ namespace rgaa {
 
     }
 
+    void Application::SendBackConfig() {
+        int count = capture_->GetCaptureCount();
+        auto msg = std::make_shared<NetMessage>();
+
+        auto config = new ConfigSync();
+        config->set_screen_size(count);
+
+        msg->set_allocated_config(config);
+
+        context_->PostNetworkBinaryMessage(msg);
+    }
+
     void Application::Exit() {
         if (timer_1s_task_id_ != -1) {
             context_->RemoveMessageTask(timer_1s_task_id_);
         }
+        if (peer_connected_msg_id_) {
+            context_->RemoveMessageTask(peer_connected_msg_id_);
+        }
+
         if (capture_) {
             capture_->Exit();
             capture_.reset();

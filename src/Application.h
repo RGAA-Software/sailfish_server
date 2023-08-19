@@ -34,6 +34,7 @@ namespace rgaa {
         void StartAudioCapturing();
         std::shared_ptr<VideoEncoder> GetEncoderForIndex(int dup_idx);
         std::shared_ptr<VideoEncoder> MakeEncoder(int dup_idx, int w, int h);
+        void SendBackConfig();
 
     private:
 
@@ -53,7 +54,7 @@ namespace rgaa {
         bool audio_enabled_ = false;
 
         int timer_1s_task_id_ = -1;
-
+        int peer_connected_msg_id_ = -1;
 
     };
 
