@@ -28,6 +28,7 @@
 #include "network/MessageMaker.h"
 #include "rgaa_common/RMessage.h"
 #include "rgaa_common/RMessageQueue.h"
+#include "capture/CursorCapture.h"
 #include "AppMessages.h"
 #include "messages.pb.h"
 
@@ -75,6 +76,8 @@ namespace rgaa {
             return;
         }
 
+        cursor_capture_ = std::make_shared<CursorCapture>(context_);
+
         // send back config
         SendBackConfig();
 
@@ -110,6 +113,11 @@ namespace rgaa {
             for (;;) {
                 if (!capture_ || !capture_->CaptureNextFrame()) {
                     break;
+                }
+
+                if (cursor_capture_) {
+                    auto cursor_info_msg = cursor_capture_->Capture();
+                    context_->PostNetworkBinaryMessage(cursor_info_msg);
                 }
             }
         }
@@ -196,6 +204,10 @@ namespace rgaa {
             capture_.reset();
             LOGI("Video capture released...");
         }
+        if (cursor_capture_) {
+            cursor_capture_.reset();
+        }
+
         if (video_thread_ && video_thread_->IsJoinable()) {
             video_thread_->Join();
             LOGI("Video thread exit...");

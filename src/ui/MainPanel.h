@@ -2,8 +2,8 @@
 // Created by RGAA on 2023/8/15.
 //
 
-#ifndef SAILFISH_SERVER_WORKSPACE_H
-#define SAILFISH_SERVER_WORKSPACE_H
+#ifndef SAILFISH_SERVER_MAINPANEL_H
+#define SAILFISH_SERVER_MAINPANEL_H
 
 #include <QWidget>
 #include <QMainWindow>
@@ -21,11 +21,11 @@ namespace rgaa {
     class AppMenu;
     class AppContent;
 
-    class Workspace : public QMainWindow {
+    class MainPanel : public QMainWindow {
     public:
 
-        Workspace(const std::shared_ptr<Context>& ctx, QWidget* parent = nullptr);
-        ~Workspace();
+        MainPanel(const std::shared_ptr<Context>& ctx, QWidget* parent = nullptr);
+        ~MainPanel();
 
         void Show();
 
@@ -48,4 +48,4 @@ namespace rgaa {
 
 }
 
-#endif //SAILFISH_SERVER_WORKSPACE_H
+#endif //SAILFISH_SERVER_MAINPANEL_H

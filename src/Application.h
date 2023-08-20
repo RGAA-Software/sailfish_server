@@ -20,6 +20,7 @@ namespace rgaa {
     class AudioEncoder;
     class Connection;
     class ClipboardManager;
+    class CursorCapture;
 
     class Application {
     public:
@@ -47,6 +48,7 @@ namespace rgaa {
         std::shared_ptr<Thread> audio_thread_ = nullptr;
         std::shared_ptr<IAudioCapture> audio_capture_ = nullptr;
         std::shared_ptr<AudioEncoder> audio_encoder_ = nullptr;
+        std::shared_ptr<CursorCapture> cursor_capture_ = nullptr;
 
         std::shared_ptr<Connection> connection_ = nullptr;
 

@@ -2,7 +2,7 @@
 // Created by RGAA on 2023/8/15.
 //
 
-#include "Workspace.h"
+#include "MainPanel.h"
 
 #include <QApplication>
 #include <QtWidgets/QHBoxLayout>
@@ -20,21 +20,21 @@
 
 namespace rgaa {
 
-    Workspace::Workspace(const std::shared_ptr<Context>& ctx, QWidget* parent) : QMainWindow(parent) {
+    MainPanel::MainPanel(const std::shared_ptr<Context>& ctx, QWidget* parent) : QMainWindow(parent) {
         context_ = ctx;
         setWindowTitle(tr("Sailfish Server"));
         CreateLayout();
         LoadStyle("");
     }
 
-    Workspace::~Workspace() {}
+    MainPanel::~MainPanel() {}
 
-    void Workspace::Show() {
+    void MainPanel::Show() {
         setFixedSize(960, 540);
         show();
     }
 
-    void Workspace::CreateLayout() {
+    void MainPanel::CreateLayout() {
         auto root_widget = new QWidget(this);
         auto root_layout = new QHBoxLayout();
         root_layout->setSpacing(0);
@@ -77,7 +77,7 @@ namespace rgaa {
         content_widget_->setCurrentIndex(0);
     }
 
-    void Workspace::LoadStyle(const std::string &name) {
+    void MainPanel::LoadStyle(const std::string &name) {
         QElapsedTimer time;
         time.start();
 

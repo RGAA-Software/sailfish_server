@@ -4,7 +4,7 @@
 #include "Application.h"
 #include "rgaa_common/RDump.h"
 #include "rgaa_common/RLog.h"
-#include "ui/Workspace.h"
+#include "ui/MainPanel.h"
 #include "context/Context.h"
 #include <QApplication>
 
@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
     auto context = std::make_shared<Context>();
     context->Init();
 
-    Workspace workspace(context, nullptr);
+    MainPanel workspace(context, nullptr);
     workspace.Show();
 
     return QApplication::exec();
