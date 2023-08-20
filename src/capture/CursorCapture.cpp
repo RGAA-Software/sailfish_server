@@ -30,6 +30,7 @@ namespace rgaa {
         GetCursorBitmap(cursor_info.hCursor, cursor_data, width, height);
 
         auto msg = std::make_shared<NetMessage>();
+        msg->set_type(MessageType::kCursorInfo);
         auto info = new CursorInfo();
         msg->set_allocated_cursor_info(info);
 
