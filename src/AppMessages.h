@@ -5,6 +5,9 @@
 #ifndef SAILFISH_SERVER_APPMESSAGES_H
 #define SAILFISH_SERVER_APPMESSAGES_H
 
+#include <string>
+#include <utility>
+
 #include "rgaa_common/RMessage.h"
 
 namespace rgaa {
@@ -13,6 +16,7 @@ namespace rgaa {
     constexpr int kMessageIDR = 0x1002;
     constexpr int kPeerConnected = 0x1003;
     constexpr int kPeerDisconnected = 0x1004;
+    constexpr int kCodeClipboard = 0x1005;
 
     // send per second
     class Timer1SMessage : public Message {
@@ -55,6 +59,19 @@ namespace rgaa {
         explicit IDRMessage(int code) : Message(code) {}
     };
 
+    // Clipboard
+    class ClipboardMessage : public Message {
+    public:
+        static std::shared_ptr<Message> Make(const std::string& msg) {
+            return std::make_shared<ClipboardMessage>(msg);
+        }
+
+        explicit ClipboardMessage(std::string  m) : Message(kCodeClipboard), msg_(std::move(m)) {}
+
+    public:
+
+        std::string msg_;
+    };
 }
 
 #endif //SAILFISH_SERVER_APPMESSAGES_H

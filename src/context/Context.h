@@ -24,6 +24,7 @@ namespace rgaa {
     class EncoderChecker;
     class NetMessage;
     class Message;
+    class ClipboardManager;
 
     class Context : public std::enable_shared_from_this<Context> {
     public:
@@ -79,6 +80,7 @@ namespace rgaa {
 
         int timer_1s_task_id_ = -1;
 
+        std::shared_ptr<ClipboardManager> clipboard_manager_ = nullptr;
     };
 
     using ContextPtr = std::shared_ptr<Context>;

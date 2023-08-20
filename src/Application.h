@@ -19,6 +19,7 @@ namespace rgaa {
     class Thread;
     class AudioEncoder;
     class Connection;
+    class ClipboardManager;
 
     class Application {
     public:

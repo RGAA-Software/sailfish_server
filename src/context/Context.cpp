@@ -16,6 +16,7 @@
 #include "Application.h"
 #include "encoder/EncoderChecker.h"
 #include "AppMessages.h"
+#include "ui/ClipboardManager.h"
 
 #include "messages.pb.h"
 
@@ -54,6 +55,9 @@ namespace rgaa {
 
         auto self = shared_from_this();
         msg_processor_ = std::make_shared<MessageProcessor>(self);
+
+        clipboard_manager_ = std::make_shared<ClipboardManager>(self);
+        clipboard_manager_->Init();
 
         encoder_checker_->CheckSupportedEncoders();
         encoder_checker_->DumpSupportedEncoders();

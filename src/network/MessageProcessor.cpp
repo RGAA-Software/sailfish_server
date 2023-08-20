@@ -11,6 +11,7 @@
 #include "rgaa_common/RTime.h"
 #include "MessageMaker.h"
 #include "messages.pb.h"
+#include "AppMessages.h"
 
 namespace rgaa {
 
@@ -58,6 +59,12 @@ namespace rgaa {
             auto resp_msg = MessageMaker::MakeHeartBeat(idx);
             context_->PostNetworkBinaryMessage(resp_msg);
 
+            return;
+        }
+        else if (message->has_clipboard()) {
+            auto clipboard = message->clipboard();
+            auto clipboard_msg = ClipboardMessage::Make(clipboard.msg());
+            context_->SendAppMessage(clipboard_msg);
             return;
         }
     }
