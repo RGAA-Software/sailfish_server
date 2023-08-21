@@ -181,7 +181,7 @@ namespace rgaa {
         int x, y;
     };
 
-    static void GetCursorBitmap(HCURSOR hCursor, std::string &bitmap, uint32_t &out_width, uint32_t &out_height) {
+    static void GetCursorBitmap(HCURSOR hCursor, std::string &bitmap, uint32_t &out_width, uint32_t &out_height, Point& hotspot) {
         if (hCursor == nullptr) {
             return;
         }
@@ -216,7 +216,7 @@ namespace rgaa {
             int buf_size = width * height * 4;
             buffer.buf = new U8[width * height * 4];
 
-            Point hotspot = Point(iconInfo.xHotspot, iconInfo.yHotspot);
+            hotspot = Point(iconInfo.xHotspot, iconInfo.yHotspot);
 
             if (iconInfo.hbmColor) {
                 auto device = ::GetDC(NULL);

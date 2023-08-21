@@ -281,21 +281,6 @@ namespace rgaa {
             auto width = desc.Width;
             auto height = desc.Height;
 
-            // cursor beg
-            CURSORINFO cursor_info = { 0 };
-            cursor_info.cbSize = sizeof(CURSORINFO);
-            GetCursorInfo(&cursor_info);
-
-            int cursor_x = cursor_info.ptScreenPos.x;
-            int cursor_y = cursor_info.ptScreenPos.y;
-
-            std::string cursor_data;
-            uint32_t cursor_width = 0;
-            uint32_t cursor_height = 0;
-            GetCursorBitmap(cursor_info.hCursor, cursor_data, cursor_width, cursor_height);
-
-            // cursor end
-
             out_dup->frame_index_++;
 
             std::vector<uint8_t> yuv_frame_data;
@@ -308,14 +293,11 @@ namespace rgaa {
             uint8_t *v = u + (pixel_size >> 2);
 
             if (DXGI_FORMAT_B8G8R8A8_UNORM == desc.Format) {
-                libyuv::ARGBToI420((uint8_t *) sr.pData, sr.RowPitch, y, width, u, uv_stride, v, uv_stride, width,
-                                   height);
+                libyuv::ARGBToI420((uint8_t *) sr.pData, sr.RowPitch, y, width, u, uv_stride, v, uv_stride, width, height);
             } else if (DXGI_FORMAT_R8G8B8A8_UNORM == desc.Format) {
-                libyuv::ABGRToI420((uint8_t *) sr.pData, sr.RowPitch, y, width, u, uv_stride, v, uv_stride, width,
-                                   height);
+                libyuv::ABGRToI420((uint8_t *) sr.pData, sr.RowPitch, y, width, u, uv_stride, v, uv_stride, width, height);
             } else {
-                libyuv::ARGBToI420((uint8_t *) sr.pData, sr.RowPitch, y, width, u, uv_stride, v, uv_stride, width,
-                                   height);
+                libyuv::ARGBToI420((uint8_t *) sr.pData, sr.RowPitch, y, width, u, uv_stride, v, uv_stride, width, height);
             }
 
             auto cp_frame = std::make_shared<CapturedFrame>();

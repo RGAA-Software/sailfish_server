@@ -21,13 +21,16 @@ namespace rgaa {
         cursor_info.cbSize = sizeof(CURSORINFO);
         GetCursorInfo(&cursor_info);
 
-        int x = cursor_info.ptScreenPos.x;
-        int y = cursor_info.ptScreenPos.y;
-
         std::string cursor_data;
         uint32_t width = 0;
         uint32_t height = 0;
-        GetCursorBitmap(cursor_info.hCursor, cursor_data, width, height);
+        Point hotspot;
+        GetCursorBitmap(cursor_info.hCursor, cursor_data, width, height, hotspot);
+
+        int hotspot_x = hotspot.x;
+        int hotspot_y = hotspot.y;
+        int x = cursor_info.ptScreenPos.x;
+        int y = cursor_info.ptScreenPos.y;
 
         auto msg = std::make_shared<NetMessage>();
         msg->set_type(MessageType::kCursorInfo);
@@ -39,6 +42,8 @@ namespace rgaa {
         info->set_data(cursor_data);
         info->set_x(x);
         info->set_y(y);
+        info->set_hotspot_x(hotspot_x);
+        info->set_hotspot_y(hotspot_y);
 
         return msg;
 //        if (cursor_callback && width > 0 && height > 0 && cursor_data.size() > 0) {
