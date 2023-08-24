@@ -24,7 +24,7 @@ namespace rgaa {
     public:
 
         explicit ClipboardManager(const std::shared_ptr<Context> & ctx);
-        ~ClipboardManager();
+        ~ClipboardManager() override;
 
         void Init();
         void SetText(const QString& msg);
@@ -33,8 +33,6 @@ namespace rgaa {
         void OnClipboardDataChanged();
 
     private:
-
-        void StartMonitoringClipboard();
         void StopMonitoringClipboard();
 
     private:
@@ -44,6 +42,8 @@ namespace rgaa {
         QClipboard* clipboard_ = nullptr;
 
         int clipboard_task_id_ = -1;
+
+        QString manual_set_msg_;
 
     };
 
