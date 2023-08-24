@@ -58,6 +58,7 @@ namespace rgaa {
 
     std::shared_ptr<NetMessage> MessageMaker::MakeHeartBeat(uint64_t idx) {
         auto message = std::make_shared<NetMessage>();
+        message->set_send_time(GetCurrentTimestamp());
         message->set_type(MessageType::kHeartBeat);
         auto beat = new HeartBeat();
         beat->set_index(idx);
@@ -68,6 +69,7 @@ namespace rgaa {
     std::shared_ptr<NetMessage> MessageMaker::MakeClipboard(const std::string& msg) {
         auto message = std::make_shared<NetMessage>();
         message->set_type(MessageType::kClipboard);
+        message->set_send_time(GetCurrentTimestamp());
         auto clipboard = new Clipboard();
         clipboard->set_msg(msg);
         message->set_allocated_clipboard(clipboard);

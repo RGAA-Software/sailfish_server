@@ -101,7 +101,7 @@ namespace rgaa {
             auto encoded_frame = encoder->Encode(cp_frame);
             if (encoded_frame && connection_) {
                 auto msg = encoded_frame->AsProtoMessage();
-                auto duration_from_capture = GetCurrentTimestamp() - encoded_frame->captured_time_;
+
                 auto duration_from_encode = GetCurrentTimestamp() - encoded_frame->encoded_time_;
                 //LOGI("Duration from capture: {}", duration_from_capture);
 

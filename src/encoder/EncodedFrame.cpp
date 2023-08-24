@@ -43,6 +43,10 @@ namespace rgaa {
         // 6. dup index
         video_frame->set_dup_idx(dup_idx_);
 
+        //
+        auto duration_from_capture = GetCurrentTimestamp() - this->captured_time_;
+        video_frame->set_encode_time(duration_from_capture);
+
         net_msg->set_allocated_video_frame(video_frame);
         return net_msg;
     }
