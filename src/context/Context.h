@@ -25,6 +25,7 @@ namespace rgaa {
     class NetMessage;
     class Message;
     class ClipboardManager;
+    class Statistics;
 
     class Context : public std::enable_shared_from_this<Context> {
     public:
@@ -59,6 +60,8 @@ namespace rgaa {
 
         void SendAppMessage(const std::shared_ptr<Message>& msg);
 
+        std::shared_ptr<Statistics> GetStatistics();
+
     private:
 
         std::shared_ptr<MessageQueue> msg_queue_ = nullptr;
@@ -81,6 +84,9 @@ namespace rgaa {
         int timer_1s_task_id_ = -1;
 
         std::shared_ptr<ClipboardManager> clipboard_manager_ = nullptr;
+
+        std::shared_ptr<Statistics> statistics_ = nullptr;
+
     };
 
     using ContextPtr = std::shared_ptr<Context>;

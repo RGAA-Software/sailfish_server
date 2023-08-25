@@ -12,6 +12,7 @@
 #include "MessageMaker.h"
 #include "messages.pb.h"
 #include "AppMessages.h"
+#include "Statistics.h"
 
 namespace rgaa {
 
@@ -66,6 +67,17 @@ namespace rgaa {
             auto clipboard_msg = ClipboardMessage::Make(clipboard.msg());
             context_->SendAppMessage(clipboard_msg);
             return;
+        }
+        else if (message->has_message_ack()) {
+            auto ack = message->message_ack();
+
+            auto frame_idx = ack.frame_index();
+            auto send_time = ack.send_time();
+            auto diff = GetCurrentTimestamp() - send_time;
+
+            auto statistics = context_->GetStatistics();
+            statistics->AppendVideoFrameNetworkTime(frame_idx, diff);
+
         }
     }
 

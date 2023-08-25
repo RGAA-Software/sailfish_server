@@ -17,6 +17,7 @@
 #include "encoder/EncoderChecker.h"
 #include "AppMessages.h"
 #include "ui/ClipboardManager.h"
+#include "Statistics.h"
 
 #include "messages.pb.h"
 
@@ -45,6 +46,8 @@ namespace rgaa {
     }
 
     void Context::Init() {
+        statistics_ = std::shared_ptr<Statistics>();
+
         task_thread_ = std::make_shared<Thread>("task_thread", 128);
         task_thread_->Poll();
 
@@ -191,5 +194,9 @@ namespace rgaa {
         if (msg_queue_) {
             msg_queue_->Queue(msg);
         }
+    }
+
+    std::shared_ptr<Statistics> Context::GetStatistics() {
+        return statistics_;
     }
 }

@@ -31,6 +31,7 @@
 #include "capture/CursorCapture.h"
 #include "AppMessages.h"
 #include "messages.pb.h"
+#include "Statistics.h"
 
 #ifdef _OS_WINDOWS_
 #define WIN32_LEAN_AND_MEAN
@@ -104,6 +105,9 @@ namespace rgaa {
 
                 auto duration_from_encode = GetCurrentTimestamp() - encoded_frame->encoded_time_;
                 //LOGI("Duration from capture: {}", duration_from_capture);
+
+                auto statistics_ = context_->GetStatistics();
+                statistics_->AppendVideoFrameSendTime(encoded_frame->frame_index_, GetCurrentTimestamp());
 
                 context_->PostNetworkBinaryMessage(msg);
             }
