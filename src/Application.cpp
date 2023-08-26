@@ -54,6 +54,9 @@ namespace rgaa {
         settings_ = Settings::Instance();
         settings_->LoadSettings();
 
+        auto statistics = context_->GetStatistics();
+        statistics->Reset();
+
         timer_1s_task_id_ = context_->RegisterMessageTask(MessageTask::Make(kMessageCodeTimer1S, [](auto& msg){
 
         }));
@@ -106,8 +109,9 @@ namespace rgaa {
                 auto duration_from_encode = GetCurrentTimestamp() - encoded_frame->encoded_time_;
                 //LOGI("Duration from capture: {}", duration_from_capture);
 
-                auto statistics_ = context_->GetStatistics();
-                statistics_->AppendVideoFrameSendTime(encoded_frame->frame_index_, GetCurrentTimestamp());
+                auto statistics = context_->GetStatistics();
+                auto video_frame = msg->mutable_video_frame();
+                video_frame->set_previous_network_time(statistics->GetFrameNetworkTime(encoded_frame->frame_index_-1));
 
                 context_->PostNetworkBinaryMessage(msg);
             }

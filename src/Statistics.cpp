@@ -6,13 +6,12 @@
 
 #include "rgaa_common/RLog.h"
 
-constexpr int kMaxNetworkTime = 120;
+constexpr int kMaxNetworkTime = 180;
 
 namespace rgaa {
 
-    Statistics::Statistics(const std::shared_ptr<Context>& ctx, const std::shared_ptr<SailfishSDK>& sdk) {
+    Statistics::Statistics(const std::shared_ptr<Context>& ctx) {
         context_ = ctx;
-        sdk_ = sdk;
     }
 
     void Statistics::AppendVideoFrameNetworkTime(uint64_t frame_idx, uint64_t diff) {
@@ -29,6 +28,10 @@ namespace rgaa {
             return video_frame_network_times_[frame_idx];
         }
         return 0;
+    }
+
+    void Statistics::Reset() {
+        video_frame_network_times_.clear();
     }
 
 }

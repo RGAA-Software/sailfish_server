@@ -16,10 +16,12 @@ namespace rgaa {
     class Statistics {
     public:
 
-        Statistics(const std::shared_ptr<Context>& ctx, const std::shared_ptr<SailfishSDK>& sdk);
+        Statistics(const std::shared_ptr<Context>& ctx);
 
         void AppendVideoFrameNetworkTime(uint64_t frame_idx, uint64_t diff);
         uint64_t GetFrameNetworkTime(uint64_t frame_idx);
+
+        void Reset();
 
     private:
 

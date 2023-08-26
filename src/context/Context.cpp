@@ -46,7 +46,7 @@ namespace rgaa {
     }
 
     void Context::Init() {
-        statistics_ = std::shared_ptr<Statistics>();
+        statistics_ = std::make_shared<Statistics>(shared_from_this());
 
         task_thread_ = std::make_shared<Thread>("task_thread", 128);
         task_thread_->Poll();
