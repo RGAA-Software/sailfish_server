@@ -120,7 +120,7 @@ namespace rgaa {
             app_ = std::make_shared<Application>(shared_from_this(), audio);
             app_->Start();
             LOGI("Application exit...");
-        }, "", false);
+        }, "app_thread", false);
     }
 
     void Context::StopApplication() {

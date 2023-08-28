@@ -162,7 +162,7 @@ namespace rgaa {
         auto capture_monitor_type = settings_->GetCaptureMonitorType();
         if (capture_monitor_type == CaptureMonitorType::kAll) {
             for (const auto& out_dup : output_duplications_) {
-                CaptureNextFrameInternal(out_dup);
+                CaptureNextFrameInternal(out_dup, 3);
             }
         }
         else if (capture_monitor_type == CaptureMonitorType::kSingle) {
@@ -172,7 +172,7 @@ namespace rgaa {
             }
 
             auto out_dup = output_duplications_.at(target_monitor_idx);
-            CaptureNextFrameInternal(out_dup);
+            CaptureNextFrameInternal(out_dup, 3);
         }
         return true;
     }
@@ -186,6 +186,12 @@ namespace rgaa {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
         LOGI("DDA exit [CaptureNextFrame]...");
+
+        for (auto& [_idx, tex] : cached_textures_) {
+            if (tex) {
+                tex->Release();
+            }
+        }
 
         for (auto& dup : output_duplications_) {
             if (dup->duplication_) {
@@ -215,22 +221,29 @@ namespace rgaa {
         return output_duplications_.size();
     }
 
-    int DDACapture::CaptureNextFrameInternal(const std::shared_ptr<OutputDuplication>& out_dup) {
+    static uint64_t last_cbk_time_ = 0;
+
+    int DDACapture::CaptureNextFrameInternal(const std::shared_ptr<OutputDuplication>& out_dup, int timeout) {
+        auto begin = std::chrono::high_resolution_clock::now();
         auto dxgi_dup = out_dup->duplication_;
         auto dxgi_dup_release = Closer::Make([dxgi_dup](){
             dxgi_dup->ReleaseFrame();
         });
 
         HRESULT hr;
-
+        bool use_cache = false;
+        ID3D11Texture2D* gpu_side_texture = nullptr;
         IDXGIResource* desk_res = nullptr;
         DXGI_OUTDUPL_FRAME_INFO frameInfo;
-        hr = dxgi_dup->AcquireNextFrame(16, &frameInfo, &desk_res);
+        hr = dxgi_dup->AcquireNextFrame(timeout, &frameInfo, &desk_res);
         if (hr == DXGI_ERROR_WAIT_TIMEOUT) {
-            //std::cout << "timeout" << std::endl;
-            return 0;
+            if (cached_textures_.find(out_dup->dup_index_) == cached_textures_.end()) {
+                LOGI("Not find cached texture...");
+                return 0;
+            }
+            use_cache = true;
         }
-        if (FAILED(hr)) {
+        else if (FAILED(hr)) {
             // perhaps shutdown and reinitialize
             auto msg = std::format("Acquire failed: {}", hr);
             std::cout << msg << std::endl;
@@ -239,36 +252,59 @@ namespace rgaa {
 
         auto capture_time = GetCurrentTimestamp();
 
-        ID3D11Texture2D* gpu_side_texture = nullptr;
-        hr = desk_res->QueryInterface(__uuidof(ID3D11Texture2D), (void**) &gpu_side_texture);
-        desk_res->Release();
-        desk_res = nullptr;
+        if (!use_cache) {
+            hr = desk_res->QueryInterface(__uuidof(ID3D11Texture2D), (void **) &gpu_side_texture);
+            desk_res->Release();
+            desk_res = nullptr;
 
-        if (FAILED(hr) || !gpu_side_texture) {
-            return hr;
+            if (FAILED(hr) || !gpu_side_texture) {
+                return hr;
+            }
+            auto gpu_texture_release = Closer::Make([gpu_side_texture]() {
+                gpu_side_texture->Release();
+            });
         }
-        auto gpu_texture_release = Closer::Make([gpu_side_texture](){
-            gpu_side_texture->Release();
-        });
-
-        auto begin = std::chrono::high_resolution_clock::now();
 
         // 1. if encode by raw data, capture => map => convert to i420 , then encode it.
         if (capture_result_type_ == CaptureResultType::kRawI420) {
-            D3D11_TEXTURE2D_DESC desc;
-            gpu_side_texture->GetDesc(&desc);
-            desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
-            desc.Usage = D3D11_USAGE_STAGING;
-            desc.BindFlags = 0;
-            desc.MiscFlags = 0;
+
+            auto func_get_desc = [=]() -> D3D11_TEXTURE2D_DESC {
+                D3D11_TEXTURE2D_DESC desc;
+                gpu_side_texture->GetDesc(&desc);
+
+                desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
+                desc.Usage = D3D11_USAGE_STAGING;
+                desc.BindFlags = 0;
+                desc.MiscFlags = 0;
+                return desc;
+            };
+
+            if (cached_textures_.find(out_dup->dup_index_) == cached_textures_.end()) {
+                ID3D11Texture2D* texture = nullptr;
+                auto desc = func_get_desc();
+                hr = d3d_device->CreateTexture2D(&desc, nullptr, &texture);
+                if (SUCCEEDED(hr)) {
+                    cached_textures_[out_dup->dup_index_] = texture;
+                }
+            }
 
             if (!cpu_side_texture_) {
+                auto desc = func_get_desc();
                 hr = d3d_device->CreateTexture2D(&desc, nullptr, &cpu_side_texture_);
                 if (FAILED(hr)) {
                     return hr;
                 }
             }
-            d3d_device_context->CopyResource(cpu_side_texture_, gpu_side_texture);
+
+            if (use_cache) {
+                auto cached_texture = cached_textures_[out_dup->dup_index_];
+                d3d_device_context->CopyResource(cpu_side_texture_, cached_texture);
+            } else {
+                d3d_device_context->CopyResource(cpu_side_texture_, gpu_side_texture);
+                if (cached_textures_.find(out_dup->dup_index_) != cached_textures_.end()) {
+                    d3d_device_context->CopyResource(cached_textures_[out_dup->dup_index_], gpu_side_texture);
+                }
+            }
 
             D3D11_MAPPED_SUBRESOURCE sr;
             hr = d3d_device_context->Map(cpu_side_texture_, 0, D3D11_MAP_READ, 0, &sr);
@@ -278,6 +314,9 @@ namespace rgaa {
             auto cpu_texture_release = Closer::Make([this]() {
                 d3d_device_context->Unmap(cpu_side_texture_, 0);
             });
+
+            D3D11_TEXTURE2D_DESC desc;
+            cpu_side_texture_->GetDesc(&desc);
             auto width = desc.Width;
             auto height = desc.Height;
 
@@ -309,10 +348,13 @@ namespace rgaa {
             cp_frame->dup_index_ = out_dup->dup_index_;
             cp_frame->captured_time_ = capture_time;
 
-            //LOGI("Captured....");
-
             if (captured_cbk_ && !exit_) {
                 captured_cbk_(cp_frame);
+
+                auto current_time = GetCurrentTimestamp();
+                auto diff = current_time - last_cbk_time_;
+                last_cbk_time_ = current_time;
+                //LOGI("{} - IN CBK - {}", out_dup->frame_index_, diff);
             }
 
         }
@@ -322,7 +364,7 @@ namespace rgaa {
 
         auto end = std::chrono::high_resolution_clock::now();
         auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(end-begin).count();
-        //std::cout << "diff : " << diff << " ms" << std::endl;
+        //LOGI("{} - DDA - {}", out_dup->frame_index_, diff);
         return 0;
     }
 

@@ -19,7 +19,7 @@ namespace rgaa {
         if (video_frame_network_times_.size() > kMaxNetworkTime) {
             auto it = video_frame_network_times_.begin();
             video_frame_network_times_.erase(it);
-            LOGI("add : {}, remove : {} {} ", frame_idx, (*it).first, (*it).second);
+            //LOGI("add : {}, remove : {} {} ", frame_idx, (*it).first, (*it).second);
         }
     }
 

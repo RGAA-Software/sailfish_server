@@ -86,6 +86,11 @@ namespace rgaa {
         SendBackConfig();
 
         capture_->SetOnFrameCapturedCallback([this](const std::shared_ptr<CapturedFrame>& cp_frame){
+            auto current_time = GetCurrentTimestamp();
+            auto diff = current_time - last_send_video_time_;
+            last_send_video_time_ = current_time;
+            //LOGI("{} - CBK - {}", cp_frame->frame_index_, diff);
+
             auto encoder = GetEncoderForIndex(cp_frame->dup_index_);
             if (!encoder) {
                 encoder = MakeEncoder(cp_frame->dup_index_, cp_frame->frame_width_, cp_frame->frame_height_);
@@ -216,10 +221,6 @@ namespace rgaa {
             cursor_capture_.reset();
         }
 
-        if (video_thread_ && video_thread_->IsJoinable()) {
-            video_thread_->Join();
-            LOGI("Video thread exit...");
-        }
         for (auto& [k, encoder] : encoders_) {
             if (encoder) {
                 encoder->Exit();

@@ -43,7 +43,6 @@ namespace rgaa {
         std::shared_ptr<Context> context_ = nullptr;
         std::shared_ptr<Capture> capture_ = nullptr;
         std::map<int, std::shared_ptr<VideoEncoder>> encoders_;
-        std::shared_ptr<Thread> video_thread_ = nullptr;
 
         std::shared_ptr<Thread> audio_thread_ = nullptr;
         std::shared_ptr<IAudioCapture> audio_capture_ = nullptr;
@@ -58,6 +57,8 @@ namespace rgaa {
 
         int timer_1s_task_id_ = -1;
         int peer_connected_msg_id_ = -1;
+
+        uint64_t last_send_video_time_ = 0;
 
     };
 

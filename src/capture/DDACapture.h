@@ -13,6 +13,7 @@
 #include <d3d11.h>
 #include <dxgi1_2.h>
 
+#include <map>
 #include <vector>
 #include <string>
 
@@ -42,7 +43,7 @@ namespace rgaa {
 
     private:
 
-        int CaptureNextFrameInternal(const std::shared_ptr<OutputDuplication>& out_dup);
+        int CaptureNextFrameInternal(const std::shared_ptr<OutputDuplication>& out_dup, int timeout);
 
     private:
 
@@ -50,6 +51,7 @@ namespace rgaa {
         ID3D11DeviceContext* d3d_device_context = nullptr;
         std::vector<std::shared_ptr<OutputDuplication>> output_duplications_;
         ID3D11Texture2D* cpu_side_texture_ = nullptr;
+        std::map<int, ID3D11Texture2D*> cached_textures_;
     };
 
 }
