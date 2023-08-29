@@ -46,13 +46,18 @@ namespace rgaa {
             LOGI("Manual set, ignore.");
             return;
         }
-
+        if (!enable_) {
+            return;
+        }
         LOGI("// clip board : {} {}", text.toStdString(), (void*)this);
         auto msg = MessageMaker::MakeClipboard(text.toStdString());
         context_->PostNetworkBinaryMessage(msg);
     }
 
     void ClipboardManager::SetText(const QString &msg) {
+        if (!enable_) {
+            return;
+        }
         manual_set_msg_ = msg;
         QMetaObject::invokeMethod(this, [=]() {
             clipboard_->setText(msg);
@@ -62,5 +67,18 @@ namespace rgaa {
     void ClipboardManager::StopMonitoringClipboard() {
         disconnect(clipboard_, &QClipboard::dataChanged, this,
                             &ClipboardManager::OnClipboardDataChanged);
+        disconnect(clipboard_, &QClipboard::dataChanged, nullptr, nullptr);
+    }
+
+    void ClipboardManager::Exit() {
+        StopMonitoringClipboard();
+    }
+
+    void ClipboardManager::Enable() {
+        enable_ = true;
+    }
+
+    void ClipboardManager::Disable() {
+        enable_ = false;
     }
 }

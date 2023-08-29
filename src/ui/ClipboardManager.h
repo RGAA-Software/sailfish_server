@@ -28,6 +28,10 @@ namespace rgaa {
 
         void Init();
         void SetText(const QString& msg);
+        void Exit();
+
+        void Enable();
+        void Disable();
 
     private slots:
         void OnClipboardDataChanged();
@@ -44,6 +48,8 @@ namespace rgaa {
         int clipboard_task_id_ = -1;
 
         QString manual_set_msg_;
+
+        bool enable_ = true;
 
     };
 

@@ -54,8 +54,8 @@ namespace rgaa {
         codec_context_->time_base = {1, 60 };
         codec_context_->pix_fmt = AV_PIX_FMT_YUV420P;
         codec_context_->thread_count = (int)std::thread::hardware_concurrency()/2;
-        //codec_context_->gop_size = 60;
-        codec_context_->gop_size = -1;
+        codec_context_->gop_size = 180;
+        //codec_context_->gop_size = -1;
 //        codec_context_->bit_rate = 400000;
         codec_context_->time_base =  {1, 90000 };
         codec_context_->max_b_frames = 0;

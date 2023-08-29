@@ -62,6 +62,12 @@ namespace rgaa {
 
         std::shared_ptr<Statistics> GetStatistics();
 
+        void EnableClipboard();
+        void DisableClipboard();
+        void EnableAudio();
+        void DisableAudio();
+        bool IsAudioEnabled();
+
     private:
 
         std::shared_ptr<MessageQueue> msg_queue_ = nullptr;
@@ -86,6 +92,8 @@ namespace rgaa {
         std::shared_ptr<ClipboardManager> clipboard_manager_ = nullptr;
 
         std::shared_ptr<Statistics> statistics_ = nullptr;
+
+        bool audio_enabled_ = true;
 
     };
 

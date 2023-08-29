@@ -77,7 +77,29 @@ namespace rgaa {
 
             auto statistics = context_->GetStatistics();
             statistics->AppendVideoFrameNetworkTime(frame_idx, diff);
+            return;
+        }
+        else if (message->has_client_cmd_report()) {
+            auto cmd = message->client_cmd_report();
+            auto type = cmd.type();
+            if (type == ClientCommandType::kStartDebug) {
 
+            }
+            else if (type == ClientCommandType::kStopDebug) {
+
+            }
+            else if (type == ClientCommandType::kEnableAudio) {
+                context_->EnableAudio();
+            }
+            else if (type == ClientCommandType::kDisableAudio) {
+                context_->DisableAudio();
+            }
+            else if (type == ClientCommandType::kEnableClipboard) {
+                context_->EnableClipboard();
+            }
+            else if (type == ClientCommandType::kDisableClipboard) {
+                context_->DisableClipboard();
+            }
         }
     }
 

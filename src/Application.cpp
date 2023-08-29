@@ -170,7 +170,7 @@ namespace rgaa {
             });
 
             audio_capture_->RegisterDataCallback([=, this] (rgaa::DataPtr data){
-                if (!audio_encoder_) {
+                if (!audio_encoder_ || !context_->IsAudioEnabled()) {
                     return;
                 }
                 // 2 channels, 16bits/8 = 2bytes, frame size is int16 format

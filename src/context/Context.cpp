@@ -124,11 +124,16 @@ namespace rgaa {
     }
 
     void Context::StopApplication() {
+        if (clipboard_manager_) {
+            clipboard_manager_->Exit();
+        }
+
         if (app_) {
             app_->Exit();
             app_.reset();
             app_ = nullptr;
         }
+
         if (app_thread_ && app_thread_->IsJoinable()) {
             app_thread_->Join();
             LOGI("App thread exit...");
@@ -198,5 +203,25 @@ namespace rgaa {
 
     std::shared_ptr<Statistics> Context::GetStatistics() {
         return statistics_;
+    }
+
+    void Context::EnableClipboard() {
+        clipboard_manager_->Enable();
+    }
+
+    void Context::DisableClipboard() {
+        clipboard_manager_->Disable();
+    }
+
+    void Context::EnableAudio() {
+        audio_enabled_ = true;
+    }
+
+    void Context::DisableAudio() {
+        audio_enabled_ = false;
+    }
+
+    bool Context::IsAudioEnabled() {
+        return audio_enabled_;
     }
 }
