@@ -17,6 +17,7 @@
 #include "AppContent.h"
 #include "InformationContent.h"
 #include "SettingsContent.h"
+#include "AboutContent.h"
 
 namespace rgaa {
 
@@ -68,6 +69,11 @@ namespace rgaa {
         auto settings_content = new SettingsContent(context_, this);
         content_widget_->addWidget(settings_content);
         contents_.push_back(settings_content);
+
+        // 2.3 about
+        auto about_content = new AboutContent(context_, this);
+        content_widget_->addWidget(about_content);
+        contents_.push_back(about_content);
 
         root_layout->addWidget(content_widget_);
 

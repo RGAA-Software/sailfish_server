@@ -19,7 +19,7 @@ namespace rgaa {
         auto root_layout = new QHBoxLayout();
         WidgetHelper::ClearMargin(root_layout);
         int margin = 20;
-        root_layout->setContentsMargins(margin, margin, margin, margin);
+        root_layout->setContentsMargins(0, margin, margin, margin);
 
         // 1. local settings
         auto local_settings_layout = new QVBoxLayout();
@@ -70,7 +70,7 @@ namespace rgaa {
             for (const auto& ip : ips) {
                 auto ip_value = new QLabel(this);
                 ip_value->setText(ip.first.c_str());
-                ip_value->setStyleSheet(R"(font-size:26px; font-family:ScreenMatrix; color: #386487; padding-left:35px;)");
+                ip_value->setStyleSheet(R"(font-size:26px; font-family:ScreenMatrix; color: #386487; padding-left:31px;)");
                 local_settings_layout->addSpacing(10);
                 local_settings_layout->addWidget(ip_value);
             }
@@ -86,7 +86,7 @@ namespace rgaa {
             auto port_value = new QLabel(this);
             auto port = std::to_string(Settings::Instance()->GetListenPort());
             port_value->setText(port.c_str());
-            port_value->setStyleSheet(R"(font-size:26px; font-family:ScreenMatrix; color: #386487; padding-left:35px;)");
+            port_value->setStyleSheet(R"(font-size:26px; font-family:ScreenMatrix; color: #386487; padding-left:31px;)");
             local_settings_layout->addSpacing(10);
             local_settings_layout->addWidget(port_value);
         }

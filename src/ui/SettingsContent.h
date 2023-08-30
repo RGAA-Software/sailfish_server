@@ -12,8 +12,8 @@ namespace rgaa {
     class SettingsContent : public AppContent {
     public:
 
-        SettingsContent(const std::shared_ptr<Context>& ctx, QWidget* parent = nullptr);
-        ~SettingsContent();
+        explicit SettingsContent(const std::shared_ptr<Context>& ctx, QWidget* parent = nullptr);
+        ~SettingsContent() override;
 
         void OnContentShow() override;
         void OnContentHide() override;

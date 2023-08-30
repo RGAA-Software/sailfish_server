@@ -127,7 +127,7 @@ namespace rgaa {
 
         auto logo_layout = new QHBoxLayout();
         auto logo = new QLabel(this);
-        auto image = new QImage(":/resources/image/logo.png");
+        auto image = new QImage(":/resources/image/logo_server.png");
         auto pixmap = QPixmap::fromImage(*image);
         pixmap = pixmap.scaled(pixmap.width()/4, pixmap.height()/4, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         logo->setPixmap(pixmap);

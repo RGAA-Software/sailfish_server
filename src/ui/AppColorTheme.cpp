@@ -12,4 +12,5 @@ namespace rgaa {
     int AppColorTheme::kAppMenuItemFontNormalColor = 0x333333;
     int AppColorTheme::kAppMenuItemFontSelectedColor = 0x333333;
     int AppColorTheme::kAppMainDarkColor = 0x386487;
+    int AppColorTheme::kAppBackgroundColor = 0xEAF7FF;
 }

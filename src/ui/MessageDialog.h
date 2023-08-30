@@ -31,7 +31,9 @@ namespace rgaa {
         }
 
         explicit MessageDialog(const std::shared_ptr<Context>& ctx, const QString& msg, QWidget* parent = nullptr);
-        ~MessageDialog();
+        ~MessageDialog() override;
+
+        void paintEvent(QPaintEvent *event) override;
 
     private:
 

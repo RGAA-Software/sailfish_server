@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>resources/image/logo.png</file>
+        <file>resources/image/logo_server.png</file>
         <file>resources/font/matrix.ttf</file>
     </qresource>
 </RCC>
