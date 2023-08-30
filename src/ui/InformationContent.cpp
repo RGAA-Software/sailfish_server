@@ -107,7 +107,7 @@ namespace rgaa {
         {
             auto title = new QLabel(this);
             title->setAlignment(Qt::AlignCenter);
-            title->setText(tr("RELAY MODE"));
+            title->setText(tr("RELAY MODE(DEVELOPING)"));
             title->setStyleSheet(R"(font-size:20px; color: #386487;)");
             relay_settings_layout->addWidget(title);
         }
