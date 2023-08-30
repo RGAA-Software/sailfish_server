@@ -55,10 +55,11 @@ namespace rgaa {
     class AppMenu : public QWidget {
     public:
 
-        AppMenu(const std::vector<QString>& items, QWidget* parent = nullptr);
-        ~AppMenu();
+        explicit AppMenu(const std::vector<QString>& items, QWidget* parent = nullptr);
+        ~AppMenu() override;
 
         void SetOnItemClickedCallback(OnItemClickedCallback cbk);
+        void paintEvent(QPaintEvent *event) override;
 
     private:
 
@@ -68,6 +69,8 @@ namespace rgaa {
 
         OnItemClickedCallback callback_;
         std::vector<AppMenuItem*> app_items;
+
+        QLabel* logo_ = nullptr;
 
     };
 

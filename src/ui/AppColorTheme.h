@@ -16,7 +16,7 @@ namespace rgaa {
         static int kAppMenuItemBgPressColor;
         static int kAppMenuItemFontNormalColor;
         static int kAppMenuItemFontSelectedColor;
-
+        static int kAppMainDarkColor;
     };
 
 }

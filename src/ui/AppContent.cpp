@@ -8,7 +8,7 @@
 
 namespace rgaa {
 
-    AppContent::AppContent(const std::shared_ptr<Context>& ctx, QWidget* parent) : QWidget(parent) {
+    AppContent::AppContent(const std::shared_ptr<Context>& ctx, QWidget* parent) : RoundRectWidget(0xffffff, 0, parent) {
         context_ = ctx;
         settings_ = Settings::Instance();
     }

@@ -12,8 +12,8 @@ namespace rgaa {
     class InformationContent : public AppContent {
     public:
 
-        InformationContent(const std::shared_ptr<Context>& ctx, QWidget* parent = nullptr);
-        ~InformationContent();
+        explicit InformationContent(const std::shared_ptr<Context>& ctx, QWidget* parent = nullptr);
+        ~InformationContent() override;
 
         void OnContentShow() override;
         void OnContentHide() override;

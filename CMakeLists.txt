@@ -43,8 +43,8 @@ find_package(Opus CONFIG REQUIRED)
 # statement in encoder/CMakeLists.txt
 #find_package(FFMPEG REQUIRED)
 
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets Core Gui)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core Gui)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets Core Gui Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core Gui Network)
 find_package(Boost COMPONENTS system filesystem thread locale program_options random)
 # find packages end
 

@@ -12,12 +12,14 @@
 #include <QVBoxLayout>
 #include <QCheckBox>
 
+#include "RoundRectWidget.h"
+
 namespace rgaa {
 
     class Context;
     class Settings;
 
-    class AppContent : public QWidget {
+    class AppContent : public RoundRectWidget {
     public:
 
         explicit AppContent(const std::shared_ptr<Context>& ctx, QWidget* parent = nullptr);

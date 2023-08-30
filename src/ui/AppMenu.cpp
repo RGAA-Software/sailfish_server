@@ -123,7 +123,21 @@ namespace rgaa {
         item_layout->setSpacing(0);
         item_layout->setContentsMargins(0,0,0,0);
 
-        item_layout->addSpacing(50);
+        item_layout->addSpacing(30);
+
+        auto logo_layout = new QHBoxLayout();
+        auto logo = new QLabel(this);
+        auto image = new QImage(":/resources/image/logo.png");
+        auto pixmap = QPixmap::fromImage(*image);
+        pixmap = pixmap.scaled(pixmap.width()/4, pixmap.height()/4, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        logo->setPixmap(pixmap);
+
+        logo_layout->addStretch();
+        logo_layout->addWidget(logo);
+        logo_layout->addStretch();
+
+        item_layout->addLayout(logo_layout);
+        item_layout->addSpacing(30);
 
         int idx = 0;
         for (const auto& item : items) {
@@ -146,7 +160,7 @@ namespace rgaa {
                 }
             });
             item_layout->addWidget(app_item);
-            item_layout->addSpacing(10);
+            item_layout->addSpacing(15);
         }
         item_layout->addStretch();
 
@@ -165,6 +179,16 @@ namespace rgaa {
     }
 
     void AppMenu::CreateLayout() {
+
+    }
+
+    void AppMenu::paintEvent(QPaintEvent *event) {
+        //QWidget::paintEvent(event);
+
+        QPainter painter(this);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QBrush(QColor(0xffffff)));
+        painter.drawRect(0, 0, this->width(), this->height());
 
     }
 

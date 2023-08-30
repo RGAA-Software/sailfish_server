@@ -7,6 +7,7 @@
 #include "ui/MainPanel.h"
 #include "context/Context.h"
 #include <QApplication>
+#include <QFontDatabase>
 
 using namespace rgaa;
 
@@ -15,6 +16,9 @@ int main(int argc, char** argv) {
     CaptureDump();
 
     QApplication qApplication(argc, argv);
+
+    int id = QFontDatabase::addApplicationFont(":/resources/font/matrix.ttf");
+    qDebug() << "font id : " << QFontDatabase::applicationFontFamilies(id) ;
 
     Logger::Init("sailfish_server.log", false);
 
