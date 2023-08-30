@@ -15,7 +15,7 @@ namespace rgaa
 		this->context = ctx;
 		this->samples = samples;
 		this->channels = channels;
-		this->bits = channels;
+		this->bits = bits;
 		encoder = std::make_shared<Encoder>(samples, channels, OPUS_APPLICATION_AUDIO);
 		if (encoder->valid()) {
 			encoder->SetComplexity(8);

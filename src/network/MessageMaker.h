@@ -19,7 +19,7 @@ namespace rgaa {
     public:
         static std::shared_ptr<NetMessage> MakeVideoConfigSync(EncodeType type, int width, int height);
         static std::shared_ptr<NetMessage> MakeAudioConfigSync(int samples, int channels);
-        static std::shared_ptr<NetMessage> MakeAudioFrameSync(const std::shared_ptr<Data>& data, int frame_size, int samples, int channels);
+        static std::shared_ptr<NetMessage> MakeAudioFrameSync(const std::shared_ptr<Data>& data, int frame_size, int samples, int channels, int bits);
         static std::shared_ptr<NetMessage> MakeHeartBeat(uint64_t idx);
         static std::shared_ptr<NetMessage> MakeClipboard(const std::string& msg);
     };

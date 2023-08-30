@@ -179,8 +179,9 @@ namespace rgaa {
                 if (!frames.empty() && connection_) {
                     auto samples = audio_encoder_->Samples();
                     auto channels = audio_encoder_->Channels();
+                    auto bits = audio_encoder_->Bits();
                     for (const auto& frame : frames) {
-                        auto msg = MessageMaker::MakeAudioFrameSync(frame, frame_size, samples, channels);
+                        auto msg = MessageMaker::MakeAudioFrameSync(frame, frame_size, samples, channels, bits);
                         context_->PostNetworkBinaryMessage(msg);
                     }
                 }
