@@ -5,11 +5,13 @@
 #include "InformationContent.h"
 
 #include "util/IPUtil.h"
-#include "settings/Settings.h"
+#include "src/context/Settings.h"
 #include "rgaa_common/RLog.h"
 #include "context/Context.h"
 #include "WidgetHelper.h"
 #include "AppColorTheme.h"
+#include "AppMessages.h"
+#include "rgaa_common/RMessageQueue.h"
 
 #include <QPainter>
 
@@ -84,6 +86,7 @@ namespace rgaa {
             local_settings_layout->addWidget(port_title);
 
             auto port_value = new QLabel(this);
+            port_label_ = port_value;
             auto port = std::to_string(Settings::Instance()->GetListenPort());
             port_value->setText(port.c_str());
             port_value->setStyleSheet(R"(font-size:26px; font-family:ScreenMatrix; color: #386487; padding-left:31px;)");
@@ -145,10 +148,16 @@ namespace rgaa {
             cb_relay_mode_->setChecked(true);
             cb_server_mode_->setChecked(false);
         }
+
+        //
+        setting_changed_task_id_ = context_->RegisterMessageTask(MessageTask::Make(kCodeSettingsChanged, [=, this](auto& msg) {
+            int port = settings_->GetListenPort();
+            port_label_->setText(QString::number(port));
+        }));
     }
 
     InformationContent::~InformationContent() {
-
+        context_->RemoveMessageTask(setting_changed_task_id_);
     }
 
     void InformationContent::OnContentShow() {

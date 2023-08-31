@@ -3,7 +3,7 @@
 //
 
 #include "EncodedFrame.h"
-#include "settings/Settings.h"
+#include "src/context/Settings.h"
 #include "rgaa_common/RData.h"
 #include "rgaa_common/RTime.h"
 
@@ -20,10 +20,10 @@ namespace rgaa {
 
         // 1. video type
         auto settings = Settings::Instance();
-        if (settings->GetEncodeType() == EncodeType::kH264) {
+        if (settings->GetEncodeType() == EncoderType::kH264) {
             video_frame->set_type(VideoType::kH264);
         }
-        else if (settings->GetEncodeType() == EncodeType::kH265) {
+        else if (settings->GetEncodeType() == EncoderType::kH265) {
             video_frame->set_type(VideoType::kH265);
         }
 

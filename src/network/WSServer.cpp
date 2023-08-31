@@ -51,16 +51,17 @@ namespace rgaa {
                     LOGI("Failed...");
                 });
 
+                LOGI("PORT::: {}", port_);
                 ws_server_->listen(port_);
                 ws_server_->start_accept();
                 ws_server_->run();
-                LOGI("After ws_server run...");
+                LOGI("After ws_server run...{}", port_);
             }
             catch (websocketpp::exception const& e) {
                 LOGE("The port : {} may already used, error : {}", port_, e.what());
             }
             catch (...) {
-                LOGE("The port : %d may already used, error : {}", port_);
+                LOGE("The port : {} may already used, error ", port_);
             }
         };
 

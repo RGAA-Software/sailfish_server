@@ -37,6 +37,7 @@ find_package(libyuv CONFIG REQUIRED)
 find_package(protobuf CONFIG REQUIRED)
 find_package(wil CONFIG REQUIRED)
 find_package(Opus CONFIG REQUIRED)
+find_package(leveldb CONFIG REQUIRED)
 # If you want to use ffmpeg installed by your vcpkg, you need to
 # ensure that ffmpeg's encoders were enabled, such as,
 # x264(software), x265(software), nvenc(hardware). Then, enable linking

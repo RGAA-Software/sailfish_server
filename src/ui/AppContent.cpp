@@ -4,7 +4,7 @@
 
 #include "AppContent.h"
 
-#include "settings/Settings.h"
+#include "src/context/Settings.h"
 
 namespace rgaa {
 

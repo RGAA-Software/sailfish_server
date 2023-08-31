@@ -5,7 +5,7 @@
 #include "Context.h"
 
 #include "network/WSServer.h"
-#include "settings/Settings.h"
+#include "Settings.h"
 #include "network/MessageProcessor.h"
 #include "rgaa_common/RData.h"
 #include "rgaa_common/RLog.h"
@@ -18,6 +18,7 @@
 #include "AppMessages.h"
 #include "ui/ClipboardManager.h"
 #include "Statistics.h"
+#include "SharedPreference.h"
 
 #include "messages.pb.h"
 
@@ -43,9 +44,18 @@ namespace rgaa {
         if (connection_) {
             connection_->Exit();
         }
+
+        this->RemoveMessageTask(setting_changed_task_id_);
     }
 
     void Context::Init() {
+        sp_ = std::make_shared<SharedPreference>();
+        sp_->Init("", "sp.data");
+        settings_->SetContext(shared_from_this());
+        settings_->SetSharedPreference(sp_);
+        settings_->LoadSettings();
+        settings_->Dump();
+
         statistics_ = std::make_shared<Statistics>(shared_from_this());
 
         task_thread_ = std::make_shared<Thread>("task_thread", 128);
@@ -64,6 +74,11 @@ namespace rgaa {
 
         encoder_checker_->CheckSupportedEncoders();
         encoder_checker_->DumpSupportedEncoders();
+
+        setting_changed_task_id_ = this->RegisterMessageTask(MessageTask::Make(kCodeSettingsChanged, [=, this](auto& msg) {
+            this->StopApplication();
+            this->EstablishConnection();
+        }));
 
         InitTimers();
 
@@ -96,7 +111,7 @@ namespace rgaa {
             connection_->Exit();
             connection_.reset();
         }
-
+        
         if (settings_->GetConnectionMode() == ConnectionMode::kDirect) {
             connection_ = std::make_shared<WSServer>(shared_from_this(), msg_processor_, "0.0.0.0", settings_->GetListenPort());
         }
@@ -136,6 +151,8 @@ namespace rgaa {
 
         if (app_thread_ && app_thread_->IsJoinable()) {
             app_thread_->Join();
+            app_thread_.reset();
+            app_thread_ = nullptr;
             LOGI("App thread exit...");
         }
     }
@@ -224,4 +241,26 @@ namespace rgaa {
     bool Context::IsAudioEnabled() {
         return audio_enabled_;
     }
+
+    std::shared_ptr<SharedPreference> Context::GetSP() {
+        return sp_;
+    }
+
+    void Context::SaveToSP(const std::string& k, const std::string& v) {
+        sp_->Put(k, v);
+    }
+
+    std::string Context::GetFromSP(const std::string& k) {
+        return sp_->Get(k);
+    }
+
+    int Context::GetFromSPAsInt(const std::string& k) {
+        auto value = sp_->Get(k);
+        if (value.empty()) {
+            return 0;
+        }
+        return std::atoi(value.c_str());
+    }
+
 }
+

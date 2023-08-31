@@ -6,7 +6,7 @@
 #include "rgaa_common/RCloser.h"
 
 #include "capture/CapturedFrame.h"
-#include "settings/Settings.h"
+#include "src/context/Settings.h"
 #include "EncodedFrame.h"
 
 #include <fstream>
@@ -18,7 +18,7 @@ namespace rgaa {
 	FFmpegEncoder::FFmpegEncoder(const std::shared_ptr<Context>& ctx, int dup_idx, const std::string& encoder_name, int width, int height)
         : VideoEncoder(ctx, dup_idx, encoder_name, width, height) {
 #if DEBUG_ENCODE_FILE
-        auto suffix = settings_->GetEncodeType() == EncodeType::kH265 ? ".h265" : ".h264";
+        auto suffix = settings_->GetEncodeType() == EncoderType::kH265 ? ".h265" : ".h264";
         auto debug_file_name = "debug_encode_" + std::to_string(dup_idx) + suffix;
         debug_encoder_file_ = std::ofstream(debug_file_name, std::ios::binary);
 #endif

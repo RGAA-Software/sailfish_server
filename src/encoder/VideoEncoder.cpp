@@ -4,7 +4,7 @@
 
 #include "VideoEncoder.h"
 
-#include "settings/Settings.h"
+#include "src/context/Settings.h"
 #include "context/Context.h"
 #include "rgaa_common/RMessageQueue.h"
 #include "rgaa_common/RLog.h"

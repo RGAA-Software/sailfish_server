@@ -8,7 +8,7 @@
 
 #include "Application.h"
 #include "context/Context.h"
-#include "settings/Settings.h"
+#include "src/context/Settings.h"
 #include "capture/Capture.h"
 #include "capture/DDACapture.h"
 #include "capture/CaptureFactory.h"
@@ -52,7 +52,6 @@ namespace rgaa {
 
     void Application::Start() {
         settings_ = Settings::Instance();
-        settings_->LoadSettings();
 
         auto statistics = context_->GetStatistics();
         statistics->Reset();

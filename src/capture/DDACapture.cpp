@@ -13,7 +13,7 @@
 #include <libyuv.h>
 
 #include "CapturedFrame.h"
-#include "settings/Settings.h"
+#include "src/context/Settings.h"
 #include "rgaa_common/RData.h"
 #include "rgaa_common/RLog.h"
 #include "rgaa_common/RCloser.h"
@@ -230,6 +230,8 @@ namespace rgaa {
             dxgi_dup->ReleaseFrame();
         });
 
+        bool is_fix_fps = []() -> bool { return Settings::Instance()->GetRunningMode() == RunningMode::kFix; } ();
+
         HRESULT hr;
         bool use_cache = false;
         ID3D11Texture2D* gpu_side_texture = nullptr;
@@ -238,10 +240,12 @@ namespace rgaa {
         hr = dxgi_dup->AcquireNextFrame(timeout, &frameInfo, &desk_res);
         if (hr == DXGI_ERROR_WAIT_TIMEOUT) {
             if (cached_textures_.find(out_dup->dup_index_) == cached_textures_.end()) {
-                LOGI("Not find cached texture...");
+                //LOGI("Not find cached texture...");
                 return 0;
             }
-            use_cache = true;
+            if (is_fix_fps) {
+                use_cache = true;
+            }
         }
         else if (FAILED(hr)) {
             // perhaps shutdown and reinitialize

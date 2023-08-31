@@ -5,7 +5,7 @@
 #include "EncoderFactory.h"
 
 #include "FFmpegEncoder.h"
-#include "settings/Settings.h"
+#include "src/context/Settings.h"
 #include "encoder/EncoderChecker.h"
 #include "context/Context.h"
 #include "rgaa_common/RLog.h"
@@ -55,13 +55,13 @@ namespace rgaa {
 
         // 2. FFmpeg
         std::shared_ptr<SupportedEncoder> ffmpeg_encoder = nullptr;
-        if (target_type == EncodeType::kH265) {
+        if (target_type == EncoderType::kH265) {
             ffmpeg_encoder = func_find_encoder_by_name("hevc_nvenc");
             if (!ffmpeg_encoder || !ffmpeg_encoder->IsValid()) {
                 ffmpeg_encoder = func_find_encoder_by_name("libx265");
             }
         }
-        else if (target_type == EncodeType::kH264) {
+        else if (target_type == EncoderType::kH264) {
             ffmpeg_encoder = func_find_encoder_by_name("h264_nvenc");
             if (!ffmpeg_encoder || !ffmpeg_encoder->IsValid()) {
                 ffmpeg_encoder = func_find_encoder_by_name("libx264");

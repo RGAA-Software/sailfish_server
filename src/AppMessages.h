@@ -17,6 +17,7 @@ namespace rgaa {
     constexpr int kPeerConnected = 0x1003;
     constexpr int kPeerDisconnected = 0x1004;
     constexpr int kCodeClipboard = 0x1005;
+    constexpr int kCodeSettingsChanged = 0x1006;
 
     // send per second
     class Timer1SMessage : public Message {
@@ -71,6 +72,16 @@ namespace rgaa {
     public:
 
         std::string msg_;
+    };
+
+    // settings changed
+    class SettingsChangedMessage : public Message {
+    public:
+        static std::shared_ptr<Message> Make() {
+            return std::make_shared<SettingsChangedMessage>();
+        }
+
+        explicit SettingsChangedMessage() : Message(kCodeSettingsChanged) {}
     };
 }
 

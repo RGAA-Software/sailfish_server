@@ -3,7 +3,7 @@
 //
 
 #include "Capture.h"
-#include "settings/Settings.h"
+#include "src/context/Settings.h"
 
 #include <utility>
 

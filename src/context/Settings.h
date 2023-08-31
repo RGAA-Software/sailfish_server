@@ -6,10 +6,11 @@
 #define SAILFISH_SERVER_SETTINGS_H
 
 #include <string>
+#include <memory>
 
 namespace rgaa {
 
-    enum class EncodeType {
+    enum class EncoderType {
         kH264,
         kH265,
     };
@@ -29,6 +30,14 @@ namespace rgaa {
         kRelay,
     };
 
+    enum class RunningMode {
+        kAuto,
+        kFix,
+    };
+
+    class Context;
+    class SharedPreference;
+
     class Settings {
     public:
 
@@ -37,26 +46,51 @@ namespace rgaa {
             return &inst;
         }
 
+        void SetContext(const std::shared_ptr<Context>& ctx);
+        void SetSharedPreference(const std::shared_ptr<SharedPreference>& sp);
         void LoadSettings();
 
-        EncodeType GetEncodeType();
+        int GetListenPort() const;
+        EncoderType GetEncodeType();
         CaptureMonitorType GetCaptureMonitorType();
+        RunningMode GetRunningMode();
+        bool IsMultiClientsEnabled();
         CaptureAPI GetCaptureAPI();
 
-        int GetListenPort();
         void SetConnectionMode(const ConnectionMode& mode);
         ConnectionMode GetConnectionMode();
 
         std::string GetRelayHost();
         int GetRelayPort();
 
+    public:
+        void SavePort(int port);
+        void SaveEncoder(EncoderType encoder);
+        void SaveCaptureMonitorType(CaptureMonitorType type);
+        void SaveRunningMode(RunningMode mode);
+        void SaveEnableMultiClients(bool enable);
+
+        void Dump();
+
+    private:
+        int GetPortFromDB();
+        EncoderType GetEncoderFromDB();
+        CaptureMonitorType GetCaptureMonitorTypeFromDB();
+        RunningMode GetRunningModeFromDB();
+        bool IsMultiClientsEnabledFromDB();
 
     private:
 
-        EncodeType encode_type_ = EncodeType::kH264;
+        std::shared_ptr<Context> context_ = nullptr;
+        std::shared_ptr<SharedPreference> sp_ = nullptr;
+
+        EncoderType encoder_type_ = EncoderType::kH264;
         CaptureMonitorType capture_monitor_type_ = CaptureMonitorType::kAll;
         CaptureAPI capture_api_ = CaptureAPI::kDesktopDuplication;
         ConnectionMode connection_mode_ = ConnectionMode::kDirect;
+        RunningMode running_mode_ = RunningMode::kAuto;
+        bool enable_multi_clients_ = true;
+
         int listen_port_ = 9090;
 
         std::string relay_host;

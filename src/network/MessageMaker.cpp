@@ -10,15 +10,15 @@
 
 namespace rgaa {
 
-    std::shared_ptr<NetMessage> MessageMaker::MakeVideoConfigSync(EncodeType type, int width, int height) {
+    std::shared_ptr<NetMessage> MessageMaker::MakeVideoConfigSync(EncoderType type, int width, int height) {
         auto message = std::make_shared<NetMessage>();
         message->set_send_time(GetCurrentTimestamp());
         message->set_type(MessageType::kVideoConfigSync);
         auto sync = new VideoConfigSync();
-        if (type == EncodeType::kH264) {
+        if (type == EncoderType::kH264) {
             sync->set_type(VideoType::kH264);
         }
-        else if (type == EncodeType::kH265) {
+        else if (type == EncoderType::kH265) {
             sync->set_type(VideoType::kH265);
         }
 

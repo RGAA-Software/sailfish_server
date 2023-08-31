@@ -10,7 +10,7 @@
 #include "encoder/EncoderFactory.h"
 #include "encoder/EncoderChecker.h"
 #include "rgaa_common/RLog.h"
-#include "settings/Settings.h"
+#include "src/context/Settings.h"
 
 namespace rgaa {
 

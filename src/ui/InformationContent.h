@@ -23,6 +23,9 @@ namespace rgaa {
         QCheckBox* cb_server_mode_ = nullptr;
         QCheckBox* cb_relay_mode_ = nullptr;
 
+        QLabel* port_label_ = nullptr;
+        int setting_changed_task_id_ = -1;
+
     };
 
 }

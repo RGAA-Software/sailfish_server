@@ -26,6 +26,7 @@ namespace rgaa {
     class Message;
     class ClipboardManager;
     class Statistics;
+    class SharedPreference;
 
     class Context : public std::enable_shared_from_this<Context> {
     public:
@@ -68,6 +69,11 @@ namespace rgaa {
         void DisableAudio();
         bool IsAudioEnabled();
 
+        std::shared_ptr<SharedPreference> GetSP();
+        void SaveToSP(const std::string& k, const std::string& v);
+        std::string GetFromSP(const std::string& k);
+        int GetFromSPAsInt(const std::string& k);
+
     private:
 
         std::shared_ptr<MessageQueue> msg_queue_ = nullptr;
@@ -88,12 +94,15 @@ namespace rgaa {
         std::shared_ptr<EncoderChecker> encoder_checker_ = nullptr;
 
         int timer_1s_task_id_ = -1;
+        int setting_changed_task_id_ = -1;
 
         std::shared_ptr<ClipboardManager> clipboard_manager_ = nullptr;
 
         std::shared_ptr<Statistics> statistics_ = nullptr;
 
         bool audio_enabled_ = true;
+
+        std::shared_ptr<SharedPreference> sp_ = nullptr;
 
     };
 

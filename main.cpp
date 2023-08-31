@@ -6,6 +6,8 @@
 #include "rgaa_common/RLog.h"
 #include "ui/MainPanel.h"
 #include "context/Context.h"
+#include "context/Settings.h"
+
 #include <QApplication>
 #include <QFontDatabase>
 
