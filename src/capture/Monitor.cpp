@@ -68,13 +68,6 @@ namespace rgaa
 
 		DEVICE_SCALE_FACTOR factor = DEVICE_SCALE_FACTOR_INVALID;
 		GetScaleFactorForMonitor(handle, &factor);
-		if (factor != DEVICE_SCALE_FACTOR_INVALID) {
-			mon.scale = factor;
-			mon.scale_factor = factor / 100.0f;
-			mon.scaled_width = (mon.right - mon.left) / mon.scale_factor;
-			mon.scaled_height = (mon.bottom - mon.top) / mon.scale_factor;
-			//printf("scale : %d, scale factor : %f, sw %d, sh%d \n", factor, mon.scale_factor, mon.scaled_width, mon.scaled_height);
-		}
 
 		info->mons[callback_count] = mon;
 		callback_count++;

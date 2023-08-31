@@ -23,10 +23,6 @@ namespace rgaa
         int top;
         int right;
         int bottom;
-        int scale;
-        float scale_factor;
-        int scaled_width;
-        int scaled_height;
         char name[CCHDEVICENAME];
     } Monitor;
     typedef std::shared_ptr<Monitor> MonitorPtr;

@@ -2,4 +2,5 @@
 .vs/*
 cmake-build-debug/*
 cmake-build-relwithdebinfo/*
+cmake-build-release/*
 out/*
