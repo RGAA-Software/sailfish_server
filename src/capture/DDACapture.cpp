@@ -230,7 +230,7 @@ namespace rgaa {
             dxgi_dup->ReleaseFrame();
         });
 
-        bool is_fix_fps = []() -> bool { return Settings::Instance()->GetRunningMode() == RunningMode::kFix; } ();
+        auto is_fix_fps = []() -> bool { return Settings::Instance()->GetRunningMode() == RunningMode::kFix; } ();
 
         HRESULT hr;
         bool use_cache = false;
@@ -240,11 +240,13 @@ namespace rgaa {
         hr = dxgi_dup->AcquireNextFrame(timeout, &frameInfo, &desk_res);
         if (hr == DXGI_ERROR_WAIT_TIMEOUT) {
             if (cached_textures_.find(out_dup->dup_index_) == cached_textures_.end()) {
-                //LOGI("Not find cached texture...");
                 return 0;
             }
             if (is_fix_fps) {
                 use_cache = true;
+            }
+            else {
+                return hr;
             }
         }
         else if (FAILED(hr)) {
