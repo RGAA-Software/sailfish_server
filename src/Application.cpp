@@ -36,7 +36,10 @@
 #ifdef _OS_WINDOWS_
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#undef min
 #endif
+
+#include <algorithm>
 
 namespace rgaa {
 
@@ -195,6 +198,10 @@ namespace rgaa {
     void Application::SendBackConfig() {
         int count = capture_->GetCaptureCount();
         auto msg = std::make_shared<NetMessage>();
+
+        if (settings_->GetCaptureMonitorType() == CaptureMonitorType::kSingle) {
+            count = std::min(1, count);
+        }
 
         auto config = new ConfigSync();
         config->set_screen_size(count);

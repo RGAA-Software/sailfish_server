@@ -10,6 +10,7 @@
 #include "rgaa_common/RThread.h"
 #include "MessageProcessor.h"
 #include "messages.pb.h"
+#include "context/Settings.h"
 
 namespace rgaa {
 
@@ -35,6 +36,14 @@ namespace rgaa {
                 });
 
                 ws_server_->set_open_handler([=, this](websocketpp::connection_hdl hdl) {
+                    if (!Settings::Instance()->IsMultiClientsEnabled()) {
+                        auto conn_count = GetConnectionPeerCount();
+                        if (conn_count >= 1) {
+                            ws_server_->close(hdl, websocketpp::close::status::normal, "config as single client...");
+                            LOGI("Close new connection because we have no permission for multi clients.");
+                            return;
+                        }
+                    }
                     AddSession(hdl);
                     NotifyPeerConnected();
                     LOGI("Open...");
