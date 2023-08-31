@@ -54,14 +54,15 @@ namespace rgaa {
         EncoderType GetEncodeType();
         CaptureMonitorType GetCaptureMonitorType();
         RunningMode GetRunningMode();
-        bool IsMultiClientsEnabled();
+        bool IsMultiClientsEnabled() const;
         CaptureAPI GetCaptureAPI();
+        int GetPreserveTime() const;
 
         void SetConnectionMode(const ConnectionMode& mode);
         ConnectionMode GetConnectionMode();
 
         std::string GetRelayHost();
-        int GetRelayPort();
+        int GetRelayPort() const;
 
     public:
         void SavePort(int port);
@@ -69,7 +70,7 @@ namespace rgaa {
         void SaveCaptureMonitorType(CaptureMonitorType type);
         void SaveRunningMode(RunningMode mode);
         void SaveEnableMultiClients(bool enable);
-
+        void SavePreserveTime(int time);
         void Dump();
 
     private:
@@ -78,6 +79,7 @@ namespace rgaa {
         CaptureMonitorType GetCaptureMonitorTypeFromDB();
         RunningMode GetRunningModeFromDB();
         bool IsMultiClientsEnabledFromDB();
+        int GetPreserveTimeFromDB();
 
     private:
 
@@ -90,7 +92,7 @@ namespace rgaa {
         ConnectionMode connection_mode_ = ConnectionMode::kDirect;
         RunningMode running_mode_ = RunningMode::kAuto;
         bool enable_multi_clients_ = true;
-
+        int preserve_time_ = 10*60; // Unit : S -> second
         int listen_port_ = 9090;
 
         std::string relay_host;

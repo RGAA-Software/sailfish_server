@@ -247,6 +247,38 @@ namespace rgaa {
             item_layout->addStretch();
             content_layout->addLayout(item_layout);
         }
+
+        content_layout->addSpacing(10);
+
+        // preserve time
+        {
+            auto item_layout = new QHBoxLayout();
+            item_layout->addSpacing(20);
+            WidgetHelper::ClearMargin(item_layout);
+            auto label = new QLabel(this);
+            label->setText(tr("PRESERVE TIME(Sec)"));
+            label->setFixedSize(label_width, 30);
+            item_layout->addWidget(label);
+
+            auto value = new QLineEdit(this);
+            preserve_et_ = value;
+            auto validator = new QIntValidator(value);
+            value->setValidator(validator);
+            value->setFixedSize(label_width, 32);
+            item_layout->addWidget(value);
+
+            value->setText(QString::number(settings_->GetPreserveTime()));
+
+            auto apply = new QPushButton(this);
+            apply->hide();
+            apply->setText(tr("APPLY"));
+            apply->setFixedSize(90, 35);
+            item_layout->addSpacing(60);
+            item_layout->addWidget(apply);
+            item_layout->addStretch();
+            content_layout->addLayout(item_layout);
+        }
+
         content_layout->addStretch();
 
         {
@@ -284,6 +316,8 @@ namespace rgaa {
 
                 // multi clients
                 settings_->SaveEnableMultiClients(multi_client_enabled_cb_->isChecked());
+
+                settings_->SavePreserveTime(preserve_et_->text().toInt());
 
                 // notify ....
                 auto msg = SettingsChangedMessage::Make();

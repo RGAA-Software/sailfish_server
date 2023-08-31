@@ -159,7 +159,8 @@ namespace rgaa {
 
     void Context::CheckHeartBeat() {
         auto current_time = GetCurrentTimestamp();
-        if (current_time - heart_beat_time_ > 5000 && heart_beat_time_ > 0) {
+        int preserve_time = settings_->GetPreserveTime() * 1000; // to [ms]
+        if (current_time - heart_beat_time_ > preserve_time && heart_beat_time_ > 0) {
             heart_beat_time_ = 0;
             LOGI("Will stop application.");
             StopApplication();

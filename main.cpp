@@ -22,6 +22,8 @@ int main(int argc, char** argv) {
     // font family : ScreenMatrix
     int id = QFontDatabase::addApplicationFont(":/resources/font/matrix.ttf");
     qDebug() << "font family : " << QFontDatabase::applicationFontFamilies(id) ;
+    id = QFontDatabase::addApplicationFont(":/resources/font/blade.ttf");
+    qDebug() << "font family : " << QFontDatabase::applicationFontFamilies(id) ;
 
     Logger::Init("sailfish_server.log", false);
 

@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>resources/image/logo_server.png</file>
         <file>resources/font/matrix.ttf</file>
+        <file>resources/font/blade.ttf</file>
     </qresource>
 </RCC>

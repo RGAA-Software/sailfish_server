@@ -57,6 +57,8 @@ namespace rgaa {
         QComboBox* encoder_cb_ = nullptr;
         QComboBox* capture_cb_ = nullptr;
         QComboBox* running_cb_ = nullptr;
+        QLineEdit* preserve_et_ = nullptr;
+
     };
 
 }

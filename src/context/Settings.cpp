@@ -15,6 +15,7 @@ static const std::string kKeyEncoder = "key_encoder";
 static const std::string kKeyCaptureMonitorType = "key_capture_monitor_type";
 static const std::string kKeyRunningMode = "key_running_mode";
 static const std::string kKeyEnableMultiClients = "key_enable_multi_clients";
+static const std::string kKeyPreserveTime = "key_preserve_time";
 
 namespace rgaa {
 
@@ -38,6 +39,7 @@ namespace rgaa {
             SaveCaptureMonitorType(capture_monitor_type_);
             SaveRunningMode(running_mode_);
             SaveEnableMultiClients(enable_multi_clients_);
+            SavePreserveTime(preserve_time_);
         }
         else {
             // load from database...
@@ -47,6 +49,7 @@ namespace rgaa {
             GetCaptureMonitorTypeFromDB();
             GetRunningModeFromDB();
             IsMultiClientsEnabledFromDB();
+            GetPreserveTimeFromDB();
         }
     }
 
@@ -78,7 +81,7 @@ namespace rgaa {
         return relay_host;
     }
 
-    int Settings::GetRelayPort() {
+    int Settings::GetRelayPort() const {
         return relay_port;
     }
 
@@ -86,8 +89,12 @@ namespace rgaa {
         return running_mode_;
     }
 
-    bool Settings::IsMultiClientsEnabled() {
+    bool Settings::IsMultiClientsEnabled() const {
         return enable_multi_clients_;
+    }
+
+    int Settings::GetPreserveTime() const {
+        return preserve_time_;
     }
 
     // --------- Put ---------
@@ -116,6 +123,11 @@ namespace rgaa {
     void Settings::SaveEnableMultiClients(bool enable) {
         enable_multi_clients_ = enable;
         sp_->Put(kKeyEnableMultiClients, std::to_string((int)enable));
+    }
+
+    void Settings::SavePreserveTime(int time) {
+        preserve_time_ = time;
+        sp_->Put(kKeyPreserveTime, std::to_string(time));
     }
 
     // --------- Get ---------
@@ -150,6 +162,12 @@ namespace rgaa {
         return enable_multi_clients_;
     }
 
+    int Settings::GetPreserveTimeFromDB() {
+        auto value = sp_->Get(kKeyPreserveTime);
+        preserve_time_ = std::atoi(value.c_str());
+        return preserve_time_;
+    }
+
     void Settings::Dump() {
         std::stringstream ss;
         ss << "Settings: " << std::endl;
@@ -158,6 +176,7 @@ namespace rgaa {
         ss << "Capture monitor type: " << (int)capture_monitor_type_ << std::endl;
         ss << "Running mode: " << (int)running_mode_ << std::endl;
         ss << "Enable multi clients: " << enable_multi_clients_ << std::endl;
+        ss << "Preserve time: " << preserve_time_ << " S" << std::endl;
         auto msg = ss.str();
         LOGI("\n- - - - - - - - - - - - - - - - - - - - - - -\n{}- - - - - - - - - - - - - - - - - - - - - - -", msg);
     }
