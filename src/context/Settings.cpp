@@ -164,7 +164,10 @@ namespace rgaa {
 
     int Settings::GetPreserveTimeFromDB() {
         auto value = sp_->Get(kKeyPreserveTime);
-        preserve_time_ = std::atoi(value.c_str());
+        auto time = std::atoi(value.c_str());
+        if (time > 0) {
+            preserve_time_ = time;
+        }
         return preserve_time_;
     }
 
