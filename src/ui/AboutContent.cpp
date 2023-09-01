@@ -43,8 +43,8 @@ namespace rgaa {
 
             auto poem = new QLabel(this);
             std::stringstream ss;
-            ss << "Angel and sweet monster" << std::endl;
-            ss << "You be pushed to me by the mysterious power with happiness" << std::endl;
+            ss << "Dear angel and sweet monster" << std::endl;
+            ss << "You are pushed to me by the mysterious power with happiness" << std::endl;
             ss << "Cute face like pink marshmallow" << std::endl;
             ss << "Small hands became magic sticks" << std::endl;
             ss << "Rescue me from the hell of illness everyday" << std::endl;
@@ -58,7 +58,19 @@ namespace rgaa {
         }
 
         content_layout->addStretch();
+        {
+            auto title_layout = new QHBoxLayout();
+            WidgetHelper::ClearMargin(title_layout);
+            title_layout->addStretch();
 
+            auto title = new QLabel(this);
+            title_layout->addWidget(title);
+            title->setText(tr("BEST"));
+            title->setStyleSheet("font-size: 20pt; font-family: 'Demon Blade';");
+            title_layout->addSpacing(30);
+            content_layout->addLayout(title_layout);
+            content_layout->addSpacing(30);
+        }
         root_widget->setLayout(content_layout);
 
         setLayout(root_layout);
