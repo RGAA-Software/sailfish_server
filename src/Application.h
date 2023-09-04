@@ -8,6 +8,9 @@
 #include <memory>
 #include <map>
 
+#include <QMutex>
+#include <QWaitCondition>
+
 namespace rgaa {
 
     class Context;
@@ -37,6 +40,7 @@ namespace rgaa {
         std::shared_ptr<VideoEncoder> GetEncoderForIndex(int dup_idx);
         std::shared_ptr<VideoEncoder> MakeEncoder(int dup_idx, int w, int h);
         void SendBackConfig();
+        void Wait(int ms);
 
     private:
 
@@ -59,6 +63,9 @@ namespace rgaa {
         int peer_connected_msg_id_ = -1;
 
         uint64_t last_send_video_time_ = 0;
+
+        QMutex wait_mtx_;
+        QWaitCondition wait_condition_;
 
     };
 

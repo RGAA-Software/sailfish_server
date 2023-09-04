@@ -8,6 +8,8 @@
 namespace rgaa {
 
     class Common {
+    public:
+
 
     };
 
