@@ -51,17 +51,17 @@ namespace rgaa {
 
         codec_context_->width = width_;
         codec_context_->height = height_;
-        codec_context_->time_base = {1, 60 };
+        codec_context_->time_base = {1, settings_->encode_fps_ };
+        codec_context_->framerate = {settings_->encode_fps_, 1};
         codec_context_->pix_fmt = AV_PIX_FMT_YUV420P;
         codec_context_->thread_count = (int)std::thread::hardware_concurrency()/2;
         codec_context_->gop_size = 180;
         //codec_context_->gop_size = -1;
-//        codec_context_->bit_rate = 400000;
-        codec_context_->time_base =  {1, 90000 };
+        codec_context_->bit_rate = settings_->encode_bps_ * 1000;
         codec_context_->max_b_frames = 0;
         codec_context_->flags |= AV_CODEC_FLAG_LOW_DELAY;
 
-        LOGI("Will config : {}", encoder_name_);
+        LOGI("Will config : {}, bitrate: {},", encoder_name_, codec_context_->bit_rate);
 
         std::string qp = "23";
         if (encoder_name_.find("nvenc") != std::string::npos) {

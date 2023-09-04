@@ -81,6 +81,10 @@ namespace rgaa {
         bool IsMultiClientsEnabledFromDB();
         int GetPreserveTimeFromDB();
 
+    public:
+        int encode_bps_ = 5;
+        int encode_fps_ = 30;
+
     private:
 
         std::shared_ptr<Context> context_ = nullptr;
