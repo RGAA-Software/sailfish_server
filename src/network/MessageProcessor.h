@@ -12,6 +12,7 @@ namespace rgaa {
 
     class Context;
     class EventReplayer;
+    class Settings;
 
     class MessageProcessor {
     public:
@@ -25,6 +26,7 @@ namespace rgaa {
 
         std::shared_ptr<EventReplayer> replayer_ = nullptr;
         std::shared_ptr<Context> context_ = nullptr;
+        Settings* settings_ = nullptr;
 
     };
 

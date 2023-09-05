@@ -2,29 +2,16 @@
 
 [简体中文](README_CN.md)
 
-#### This is the server side of Sailfish Remote Controller, this project is NOT well tested, so, if you want to use or publish in product environment, you should debug it yourself !  
-#### The project is NOT a universal remote controller app, please read the doc following. 
+#### 这是Sailfish Remote Controller的服务端, 这个项目并没有很好的测试, 因此, 如果你想使用或者在生产环境中发布，你需要自己调试好它 !
+#### 这并不是一个通用的远程控制软件，请阅读下面的文档.
+
+### **[Here is the client](https://github.com/RGAA-Software/sailfish_client_pc)**
 
 #### Why?
 I want to control other computers in my local area network, some of the other computers have 2 monitors. I've known that VNC is a good choice, but I need to connect many computers at same time with high FPS.  
 Some business products work very well, although multiple monitors function is chargeable, therefore I start to develop this project.
 
-#### Here is a list of the used technologies that you may want to lean 
-- Cpp for both server and client
-- Qt for the UI
-- FFmpeg for encoding and decoding
-- OpenGL for client displaying
-- Opus for audio encoding and decoding
-- VCPKG for package manager
-- DDA(Desktop Duplication API) for capturing image
-- Libyuv for converting image's format
-- Websocket for sending & receiving data packages
-- ProtoBuf for serializing data
-- LevelDB for saving simple config
-
-### **[How to compile](#Compile)**
-
-#### Features  
+#### Features
 - Support H264 and H265, both hardware and software with ffmpeg
 - Support multiple clients at same time
 - Support 2 or more monitors
@@ -54,7 +41,7 @@ Some business products work very well, although multiple monitors function is ch
 - Preserve time: After the duration in seconds, the image capture, audio capture ,etc, will be destroyed.
 
 ![](images/main_ui_settings.png)
-#### Yes, A poem, for my children. 
+#### Yes, A poem, for my children.
 #### I have some incurable illnesses, thanks to my angels, I can overcome these serious matters.
 #### Life with you
 - Dear angel and sweet monster
@@ -79,27 +66,6 @@ Some business products work very well, although multiple monitors function is ch
 - fix the menu at top: true -> the menu will stay on title bar, false -> the menu will stay under title bar
 - audio enabled: audio, see below
 - clipboard enabled: clipboard, see below
-- multiple monitors display mode: two separated windows or one combined window
+- 
 
 ![](images/client_main_settings.png)
-
-#### Running & Debug
-![](images/client_operator.png)
-![](images/client_debug.png)
-
-#### 2 Monitors at same time
-![](images/client_2_separated.png)
-
-#### Yes, a poem again
-#### Together
-- Birds build nest and sleep in
-- Shining diamonds fall of on my bed
-- Gave them back to the sprites
-- I am gifted melliferous toffee today
-- We will sit at the beach in the future
-- Wait for free wind to full in our sleeves
-
-
-![](images/client_poem.png)
-
-### Compile

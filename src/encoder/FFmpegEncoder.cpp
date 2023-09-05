@@ -51,21 +51,21 @@ namespace rgaa {
 
         codec_context_->width = width_;
         codec_context_->height = height_;
-        codec_context_->time_base = {1, 60 };
+        codec_context_->time_base = {1, settings_->encode_fps_ };
+        codec_context_->framerate = {settings_->encode_fps_, 1};
         codec_context_->pix_fmt = AV_PIX_FMT_YUV420P;
         codec_context_->thread_count = (int)std::thread::hardware_concurrency()/2;
         codec_context_->gop_size = 180;
         //codec_context_->gop_size = -1;
-//        codec_context_->bit_rate = 400000;
-        codec_context_->time_base =  {1, 90000 };
+        codec_context_->bit_rate = settings_->encode_bps_ * 1000;
         codec_context_->max_b_frames = 0;
         codec_context_->flags |= AV_CODEC_FLAG_LOW_DELAY;
 
-        LOGI("Will config : {}", encoder_name_);
+        LOGI("Encoder name: {}, bitrate: {}kpbs, width: {}, height: {}, fps: {}",
+             encoder_name_, codec_context_->bit_rate, width_, height_, settings_->encode_fps_);
 
         std::string qp = "23";
         if (encoder_name_.find("nvenc") != std::string::npos) {
-            LOGI("Config : {}", encoder_name_);
             av_opt_set(codec_context_->priv_data, "preset", "llhp", 0);
             av_opt_set(codec_context_->priv_data, "profile", "main", 0);
             av_opt_set(codec_context_->priv_data, "delay", "0", 0);
@@ -75,7 +75,7 @@ namespace rgaa {
                 av_opt_set(codec_context_->priv_data, "rc", "cbr", 0);
                 av_opt_set(codec_context_->priv_data, "cq", qp.c_str(), 0);
             }
-            else if (encoder_name_ == "hevc_nvenc"/*AV_CODEC_ID_HEVC == GetCodecID()*/) {
+            else if (encoder_name_ == "hevc_nvenc") {
                 av_opt_set(codec_context_->priv_data, "qp", qp.c_str(), 0);
             }
             av_opt_set(codec_context_->priv_data, "tune", "ull", 0);
@@ -83,7 +83,6 @@ namespace rgaa {
 
         }
         else if (encoder_name_.find("libx") != std::string::npos) {
-            LOGI("Config : {}", encoder_name_);
             av_opt_set(codec_context_->priv_data, "preset", "ultrafast", 0);
             av_opt_set(codec_context_->priv_data, "crf", "23", 0);
             av_opt_set(codec_context_->priv_data, "forced-idr", "1", 0);

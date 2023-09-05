@@ -13,12 +13,14 @@
 #include "messages.pb.h"
 #include "AppMessages.h"
 #include "Statistics.h"
+#include "context/Settings.h"
 
 namespace rgaa {
 
     MessageProcessor::MessageProcessor(const std::shared_ptr<Context>& ctx) {
         context_ = ctx;
         replayer_ = std::make_shared<EventReplayer>(ctx);
+        settings_ = Settings::Instance();
     }
 
     MessageProcessor::~MessageProcessor() {
@@ -34,8 +36,10 @@ namespace rgaa {
 
         if (message->has_start_recording()) {
             auto& payload = message->start_recording();
+            settings_->encode_bps_ = payload.bitrate();
+            settings_->encode_fps_ = payload.approximate_fps();
             context_->PostTask([=, this] () {
-                context_->StartApplication(payload.audio());
+                context_->StartApplication(true);
             });
             return;
         }

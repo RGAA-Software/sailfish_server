@@ -181,13 +181,11 @@ namespace rgaa {
     }
 
     void WSServer::RemoveSession(websocketpp::connection_hdl hdl) {
-        std::cout << "before move , size : " << sessions_.size() << std::endl;
         std::lock_guard<std::mutex> guard(session_mtx_);
         auto it = sessions_.find(hdl);
         if (it != sessions_.end()) {
             sessions_.erase(it);
         }
-        std::cout << "after move , size : " << sessions_.size() << std::endl;
     }
 
     std::shared_ptr<WSSession> WSServer::GetSession(websocketpp::connection_hdl hdl) {
