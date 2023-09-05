@@ -112,6 +112,7 @@ namespace rgaa {
             // 1
             DXGI_OUTPUT_DESC desc;
             op->GetDesc(&desc);
+            output_dup->desc_ = desc;
 
             // 2
             // QI for Output 1
@@ -221,8 +222,6 @@ namespace rgaa {
         return output_duplications_.size();
     }
 
-    static uint64_t last_cbk_time_ = 0;
-
     int DDACapture::CaptureNextFrameInternal(const std::shared_ptr<OutputDuplication>& out_dup, int timeout) {
         auto begin = std::chrono::high_resolution_clock::now();
         auto dxgi_dup = out_dup->duplication_;
@@ -250,9 +249,9 @@ namespace rgaa {
             }
         }
         else if (FAILED(hr)) {
-            // perhaps shutdown and reinitialize
-            auto msg = std::format("Acquire failed: {}", hr);
-            std::cout << msg << std::endl;
+            LOGE("Acquire failed: {0:x}, MUST re-init", hr);
+            // todo re-init...
+            std::this_thread::sleep_for(std::chrono::milliseconds(17));
             return hr;
         }
 
@@ -277,6 +276,8 @@ namespace rgaa {
             auto func_get_desc = [=]() -> D3D11_TEXTURE2D_DESC {
                 D3D11_TEXTURE2D_DESC desc;
                 gpu_side_texture->GetDesc(&desc);
+
+                LOGI("Create texture: {} x {}", desc.Width, desc.Height);
 
                 desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
                 desc.Usage = D3D11_USAGE_STAGING;
@@ -354,13 +355,14 @@ namespace rgaa {
             cp_frame->dup_index_ = out_dup->dup_index_;
             cp_frame->captured_time_ = capture_time;
 
+            //LOGI("dup index: {}, width: {}, height: {}", out_dup->dup_index_, desc.Width, desc.Height);
+
             if (captured_cbk_ && !exit_) {
                 captured_cbk_(cp_frame);
 
                 auto current_time = GetCurrentTimestamp();
                 auto diff = current_time - last_cbk_time_;
                 last_cbk_time_ = current_time;
-                //LOGI("{} - IN CBK - {}", out_dup->frame_index_, diff);
             }
 
         }
@@ -370,7 +372,7 @@ namespace rgaa {
 
         auto end = std::chrono::high_resolution_clock::now();
         auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(end-begin).count();
-        //LOGI("{} - DDA - {}", out_dup->frame_index_, diff);
+
         return 0;
     }
 

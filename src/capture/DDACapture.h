@@ -52,6 +52,8 @@ namespace rgaa {
         std::vector<std::shared_ptr<OutputDuplication>> output_duplications_;
         ID3D11Texture2D* cpu_side_texture_ = nullptr;
         std::map<int, ID3D11Texture2D*> cached_textures_;
+        uint64_t last_cbk_time_ = 0;
+
     };
 
 }

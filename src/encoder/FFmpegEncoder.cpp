@@ -61,11 +61,11 @@ namespace rgaa {
         codec_context_->max_b_frames = 0;
         codec_context_->flags |= AV_CODEC_FLAG_LOW_DELAY;
 
-        LOGI("Will config : {}, bitrate: {},", encoder_name_, codec_context_->bit_rate);
+        LOGI("Encoder name: {}, bitrate: {}kpbs, width: {}, height: {}, fps: {}",
+             encoder_name_, codec_context_->bit_rate, width_, height_, settings_->encode_fps_);
 
         std::string qp = "23";
         if (encoder_name_.find("nvenc") != std::string::npos) {
-            LOGI("Config : {}", encoder_name_);
             av_opt_set(codec_context_->priv_data, "preset", "llhp", 0);
             av_opt_set(codec_context_->priv_data, "profile", "main", 0);
             av_opt_set(codec_context_->priv_data, "delay", "0", 0);
@@ -75,7 +75,7 @@ namespace rgaa {
                 av_opt_set(codec_context_->priv_data, "rc", "cbr", 0);
                 av_opt_set(codec_context_->priv_data, "cq", qp.c_str(), 0);
             }
-            else if (encoder_name_ == "hevc_nvenc"/*AV_CODEC_ID_HEVC == GetCodecID()*/) {
+            else if (encoder_name_ == "hevc_nvenc") {
                 av_opt_set(codec_context_->priv_data, "qp", qp.c_str(), 0);
             }
             av_opt_set(codec_context_->priv_data, "tune", "ull", 0);
@@ -83,7 +83,6 @@ namespace rgaa {
 
         }
         else if (encoder_name_.find("libx") != std::string::npos) {
-            LOGI("Config : {}", encoder_name_);
             av_opt_set(codec_context_->priv_data, "preset", "ultrafast", 0);
             av_opt_set(codec_context_->priv_data, "crf", "23", 0);
             av_opt_set(codec_context_->priv_data, "forced-idr", "1", 0);

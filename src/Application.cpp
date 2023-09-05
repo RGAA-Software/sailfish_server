@@ -32,6 +32,7 @@
 #include "AppMessages.h"
 #include "messages.pb.h"
 #include "Statistics.h"
+#include "util/MonitorDetector.h"
 
 #ifdef _OS_WINDOWS_
 #define WIN32_LEAN_AND_MEAN
@@ -202,6 +203,10 @@ namespace rgaa {
         if (settings_->GetCaptureMonitorType() == CaptureMonitorType::kSingle) {
             count = std::min(1, count);
         }
+
+        auto detector = MonitorDetector::Instance();
+        detector->DetectMonitors();
+        detector->Dump();
 
         auto config = new ConfigSync();
         config->set_screen_size(count);
