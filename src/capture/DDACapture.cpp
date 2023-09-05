@@ -106,7 +106,26 @@ namespace rgaa {
             ++i;
         }
 
-        int op_idx = 0;
+        std::vector<long> desc_left;
+        for (const auto op : total_outputs) {
+            DXGI_OUTPUT_DESC desc;
+            op->GetDesc(&desc);
+            long left = desc.DesktopCoordinates.left;
+            desc_left.push_back(left);
+        }
+        std::sort(desc_left.begin(), desc_left.end());
+
+        auto func_index_by_left = [&](long left) {
+            int idx = 0;
+            for (auto& l : desc_left) {
+                if (l == left) {
+                    return idx;
+                }
+                idx++;
+            }
+        };
+
+        //int op_idx = 0;
         for (const auto op : total_outputs) {
             auto output_dup = std::make_shared<OutputDuplication>();
             // 1
@@ -140,7 +159,9 @@ namespace rgaa {
                 continue;
             }
 
-            output_dup->dup_index_ = op_idx++;
+            output_dup->dup_index_ = func_index_by_left(desc.DesktopCoordinates.left);//op_idx++;
+
+            LOGI("Dup index: {}, left: {}", output_dup->dup_index_, desc.DesktopCoordinates.left);
 
             output_duplications_.push_back(output_dup);
         }
@@ -211,8 +232,8 @@ namespace rgaa {
             LOGI("D3D device released...");
         }
 
-        if (cpu_side_texture_) {
-            cpu_side_texture_->Release();
+        for (auto& [_, texture] : cpu_side_textures_) {
+            texture->Release();
             LOGI("D3D staging texture released...");
         }
         LOGI("DDACapture exit...");
@@ -295,9 +316,9 @@ namespace rgaa {
                 }
             }
 
-            if (!cpu_side_texture_) {
+            if (cpu_side_textures_.find(out_dup->dup_index_) == cpu_side_textures_.end()) {
                 auto desc = func_get_desc();
-                hr = d3d_device->CreateTexture2D(&desc, nullptr, &cpu_side_texture_);
+                hr = d3d_device->CreateTexture2D(&desc, nullptr, &cpu_side_textures_[out_dup->dup_index_]);
                 if (FAILED(hr)) {
                     return hr;
                 }
@@ -305,25 +326,25 @@ namespace rgaa {
 
             if (use_cache) {
                 auto cached_texture = cached_textures_[out_dup->dup_index_];
-                d3d_device_context->CopyResource(cpu_side_texture_, cached_texture);
+                d3d_device_context->CopyResource(cpu_side_textures_[out_dup->dup_index_], cached_texture);
             } else {
-                d3d_device_context->CopyResource(cpu_side_texture_, gpu_side_texture);
+                d3d_device_context->CopyResource(cpu_side_textures_[out_dup->dup_index_], gpu_side_texture);
                 if (cached_textures_.find(out_dup->dup_index_) != cached_textures_.end()) {
                     d3d_device_context->CopyResource(cached_textures_[out_dup->dup_index_], gpu_side_texture);
                 }
             }
 
             D3D11_MAPPED_SUBRESOURCE sr;
-            hr = d3d_device_context->Map(cpu_side_texture_, 0, D3D11_MAP_READ, 0, &sr);
+            hr = d3d_device_context->Map(cpu_side_textures_[out_dup->dup_index_], 0, D3D11_MAP_READ, 0, &sr);
             if (FAILED(hr)) {
                 return hr;
             }
-            auto cpu_texture_release = Closer::Make([this]() {
-                d3d_device_context->Unmap(cpu_side_texture_, 0);
+            auto cpu_texture_release = Closer::Make([=]() {
+                d3d_device_context->Unmap(cpu_side_textures_[out_dup->dup_index_], 0);
             });
 
             D3D11_TEXTURE2D_DESC desc;
-            cpu_side_texture_->GetDesc(&desc);
+            cpu_side_textures_[out_dup->dup_index_]->GetDesc(&desc);
             auto width = desc.Width;
             auto height = desc.Height;
 

@@ -45,7 +45,7 @@ namespace rgaa {
         std::vector<QString> menus = {
                 tr("INFORMATION"),
                 tr("SETTINGS"),
-                tr("ABOUT"),
+                tr("FOR YOU"),
         };
         app_menu_ = new AppMenu(menus, this);
         app_menu_->SetOnItemClickedCallback([this](const QString& name, int idx) {

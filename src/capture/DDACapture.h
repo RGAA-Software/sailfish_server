@@ -50,7 +50,7 @@ namespace rgaa {
         ID3D11Device* d3d_device = nullptr;
         ID3D11DeviceContext* d3d_device_context = nullptr;
         std::vector<std::shared_ptr<OutputDuplication>> output_duplications_;
-        ID3D11Texture2D* cpu_side_texture_ = nullptr;
+        std::map<int, ID3D11Texture2D*> cpu_side_textures_;
         std::map<int, ID3D11Texture2D*> cached_textures_;
         uint64_t last_cbk_time_ = 0;
 

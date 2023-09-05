@@ -210,6 +210,11 @@ namespace rgaa {
 
         auto config = new ConfigSync();
         config->set_screen_size(count);
+        for (auto& info : detector->GetMonitors()) {
+            auto monitor = config->add_monitors();
+            monitor->set_width(info.width);
+            monitor->set_height(info.height);
+        }
 
         msg->set_allocated_config(config);
 
