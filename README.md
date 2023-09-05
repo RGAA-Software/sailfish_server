@@ -12,6 +12,8 @@ Some business products work very well, although multiple monitors function is ch
 - Support multiple clients at same time
 - Support 2 or more monitors
 - Support high FPS
+- Support clipboard for TEXT
+- Support audio
 
 #### Roadmap
 - Relay mode
@@ -20,9 +22,28 @@ Some business products work very well, although multiple monitors function is ch
 - Encode with NVENC directly
 - Web client
 
+### Here are Server's UI and instruction
 #### Server main ui
+- IP Accessible: Your computer's IP, one or more
+- Port Listening: The port that server is listening on
+
 ![](docs/main_ui.png)
+
 #### Server settings ui
+- Encoder: H264 or H265, choose Hxxx_nvenc first
+- Capture Mode: Capture single monitor or all monitors at same time, I'm normally using 2 monitors.
+- Running Mode: "Auto fps" means to capture an image when the content has changed while "Try fixing fps" will use a cached image.
+- Multi clients: Enable multiple clients to connect at same time or not.
+- Preserve time: After the duration in seconds, the image capture, audio capture ,etc, will be destroyed.
+
 ![](docs/main_ui_settings.png)
-#### Yes, A poem, for my children.
+#### Yes, A poem, for my children. 
+#### I have some incurable illnesses, thanks to my angels, I can overcome these serious matters.
+#### Life with you
+- Dear angel and sweet monster
+- You are pushed to me by the mysterious power with happiness
+- cute face like pink marshmallow
+- Small hands became magic sticks
+- Rescue me from the hell of illness everyday
+
 ![](docs/main_ui_poem.png)
