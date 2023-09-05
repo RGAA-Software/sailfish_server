@@ -5,6 +5,8 @@
 #### 这是Sailfish Remote Controller的服务端, 这个项目并没有很好的测试, 因此, 如果你想使用或者在生产环境中发布，你需要自己调试好它 !
 #### 这并不是一个通用的远程控制软件，请阅读下面的文档.
 
+### **[Here is the client](https://github.com/RGAA-Software/sailfish_client_pc)**
+
 #### Why?
 I want to control other computers in my local area network, some of the other computers have 2 monitors. I've known that VNC is a good choice, but I need to connect many computers at same time with high FPS.  
 Some business products work very well, although multiple monitors function is chargeable, therefore I start to develop this project.
@@ -49,3 +51,21 @@ Some business products work very well, although multiple monitors function is ch
 - Rescue me from the hell of illness everyday
 
 ![](images/main_ui_poem.png)
+
+### Here are Client's UI and instruction
+
+#### Client main ui
+- Double click or right click to start a stream
+- Click the + button to add new stream
+- Right click to edit or delete
+
+![](images/client_main.png)
+![](images/client_main_add.png)
+
+#### Client settings ui
+- fix the menu at top: true -> the menu will stay on title bar, false -> the menu will stay under title bar
+- audio enabled: audio, see below
+- clipboard enabled: clipboard, see below
+- 
+
+![](images/client_main_settings.png)

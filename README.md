@@ -9,6 +9,20 @@
 I want to control other computers in my local area network, some of the other computers have 2 monitors. I've known that VNC is a good choice, but I need to connect many computers at same time with high FPS.  
 Some business products work very well, although multiple monitors function is chargeable, therefore I start to develop this project.
 
+#### Here is a list of the used technologies that you may want to lean 
+- Cpp for both server and client
+- Qt for the UI
+- FFmpeg for encoding and decoding
+- OpenGL for client display
+- Opus for audio encoding and decoding
+- VCPKG for package manager
+- DDA(Desktop Duplication API) for capturing image
+- Websocket for sending & receiving data packages
+- ProtoBuf for serializing data
+- LevelDB for saving simple config
+
+### **[How to compile](#Compile)**
+
 #### Features  
 - Support H264 and H265, both hardware and software with ffmpeg
 - Support multiple clients at same time
@@ -49,3 +63,27 @@ Some business products work very well, although multiple monitors function is ch
 - Rescue me from the hell of illness everyday
 
 ![](images/main_ui_poem.png)
+
+### Here are Client's UI and instruction
+
+#### Client main ui
+- Double click or right click to start a stream
+- Click the + button to add new stream
+- Right click to edit or delete
+
+![](images/client_main.png)
+![](images/client_main_add.png)
+
+#### Client settings ui
+- fix the menu at top: true -> the menu will stay on title bar, false -> the menu will stay under title bar
+- audio enabled: audio, see below
+- clipboard enabled: clipboard, see below
+- multiple monitors display mode: two separated windows or on combined window
+
+![](images/client_main_settings.png)
+
+#### Running & Debug
+![](images/client_operator.png)
+![](images/client_debug.png)
+
+### Compile
