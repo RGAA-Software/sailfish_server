@@ -13,10 +13,11 @@ Some business products work very well, although multiple monitors function is ch
 - Cpp for both server and client
 - Qt for the UI
 - FFmpeg for encoding and decoding
-- OpenGL for client display
+- OpenGL for client displaying
 - Opus for audio encoding and decoding
 - VCPKG for package manager
 - DDA(Desktop Duplication API) for capturing image
+- Libyuv for converting image's format
 - Websocket for sending & receiving data packages
 - ProtoBuf for serializing data
 - LevelDB for saving simple config
@@ -78,12 +79,24 @@ Some business products work very well, although multiple monitors function is ch
 - fix the menu at top: true -> the menu will stay on title bar, false -> the menu will stay under title bar
 - audio enabled: audio, see below
 - clipboard enabled: clipboard, see below
-- multiple monitors display mode: two separated windows or on combined window
+- multiple monitors display mode: two separated windows or one combined window
 
 ![](images/client_main_settings.png)
 
 #### Running & Debug
 ![](images/client_operator.png)
 ![](images/client_debug.png)
+
+#### Yes, a poem again
+#### Together
+- Birds build nest and sleep in
+- Shining diamonds fall of on my bed
+- Gave them back to the sprites
+- I am gifted melliferous toffee today
+- We will sit at the beach in the future
+- Wait for free wind to full in our sleeves
+
+
+![](images/client_poem.png)
 
 ### Compile
