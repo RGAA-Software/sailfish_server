@@ -87,6 +87,9 @@ Some business products work very well, although multiple monitors function is ch
 ![](images/client_operator.png)
 ![](images/client_debug.png)
 
+#### 2 Monitors at same time
+![](images/client_2_separated.png)
+
 #### Yes, a poem again
 #### Together
 - Birds build nest and sleep in
