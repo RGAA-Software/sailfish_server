@@ -2,14 +2,14 @@
 
 [简体中文](README_CN.md)
 
-#### This is the server side of Sailfish Remote Controller, this project is NOT well tested, so, if you want to use or publish in product environment, you should debug it yourself !  
-#### The project is NOT a universal remote controller app, please read the doc following. 
+#### 这是Sailfish Remote Controller的服务端, 这个项目并没有很好的测试, 因此, 如果你想使用或者在生产环境中发布，你需要自己调试好它 !
+#### 这并不是一个通用的远程控制软件，请阅读下面的文档.
 
 #### Why?
 I want to control other computers in my local area network, some of the other computers have 2 monitors. I've known that VNC is a good choice, but I need to connect many computers at same time with high FPS.  
 Some business products work very well, although multiple monitors function is chargeable, therefore I start to develop this project.
 
-#### Features  
+#### Features
 - Support H264 and H265, both hardware and software with ffmpeg
 - Support multiple clients at same time
 - Support 2 or more monitors
@@ -39,7 +39,7 @@ Some business products work very well, although multiple monitors function is ch
 - Preserve time: After the duration in seconds, the image capture, audio capture ,etc, will be destroyed.
 
 ![](images/main_ui_settings.png)
-#### Yes, A poem, for my children. 
+#### Yes, A poem, for my children.
 #### I have some incurable illnesses, thanks to my angels, I can overcome these serious matters.
 #### Life with you
 - Dear angel and sweet monster
