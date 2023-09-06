@@ -93,7 +93,7 @@ Some business products work very well, although multiple monitors function is ch
 #### Yes, a poem again
 #### Together
 - Birds build nest and sleep in
-- Shining diamonds fall of on my bed
+- Shining diamonds fall off on my bed
 - Gave them back to the sprites
 - I am gifted melliferous toffee today
 - We will sit at the beach in the future
