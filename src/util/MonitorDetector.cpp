@@ -42,6 +42,8 @@ namespace rgaa {
                 }
             }
         }
+
+        std::sort(infos.begin(), infos.end());
     }
 
     std::vector<MonitorInfo> MonitorDetector::GetMonitors() {
@@ -53,6 +55,16 @@ namespace rgaa {
             LOGI("Monitor name : {}, resolution : {} x {}, left top : ", info.display_name.c_str(),
                  info.width, info.height, info.rect.left, info.rect.top);
         }
+    }
+
+    std::tuple<int, int, int> MonitorDetector::CalculateInWhichMonitor(int x) {
+        for (int i = 0; i < infos.size(); i++) {
+            const auto& info = infos.at(i);
+            if (x >= info.rect.left && x < info.rect.right) {
+                return std::make_tuple(i, info.rect.left, info.rect.right);
+            }
+        }
+        return std::make_tuple(0, 0, 0);
     }
 
 }

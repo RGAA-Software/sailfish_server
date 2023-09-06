@@ -26,6 +26,11 @@ namespace rgaa {
         RECT rect{};
         int width = 0;
         int height = 0;
+
+        bool operator < (const MonitorInfo& in) const {
+            return this->rect.left < in.rect.left;
+        }
+
     };
 
     class MonitorDetector {
@@ -39,6 +44,8 @@ namespace rgaa {
         void DetectMonitors();
         std::vector<MonitorInfo> GetMonitors();
         void Dump();
+
+        std::tuple<int, int, int> CalculateInWhichMonitor(int x);
 
     private:
 

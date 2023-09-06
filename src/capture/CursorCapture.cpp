@@ -7,10 +7,13 @@
 #include "context/Context.h"
 #include "messages.pb.h"
 
+#include "util/MonitorDetector.h"
+
 namespace rgaa {
 
     CursorCapture::CursorCapture(const std::shared_ptr<Context>& ctx) {
         context_ = ctx;
+        MonitorDetector::Instance()->DetectMonitors();
     }
 
     std::shared_ptr<NetMessage> CursorCapture::Capture() {
@@ -32,6 +35,9 @@ namespace rgaa {
         int x = cursor_info.ptScreenPos.x;
         int y = cursor_info.ptScreenPos.y;
 
+        auto monitor_detector = MonitorDetector::Instance();
+        std::tuple<int, int, int> position = monitor_detector->CalculateInWhichMonitor(x);
+
         auto msg = std::make_shared<NetMessage>();
         msg->set_type(MessageType::kCursorInfo);
         auto info = new CursorInfo();
@@ -44,6 +50,9 @@ namespace rgaa {
         info->set_y(y);
         info->set_hotspot_x(hotspot_x);
         info->set_hotspot_y(hotspot_y);
+        info->set_dup_idx(std::get<0>(position));
+        info->set_tex_left(std::get<1>(position));
+        info->set_tex_right(std::get<2>(position));
 
         return msg;
 //        if (cursor_callback && width > 0 && height > 0 && cursor_data.size() > 0) {

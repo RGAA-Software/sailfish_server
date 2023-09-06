@@ -115,7 +115,7 @@ namespace rgaa {
         }
         std::sort(desc_left.begin(), desc_left.end());
 
-        auto func_index_by_left = [&](long left) {
+        auto func_index_by_left = [&](long left) -> int {
             int idx = 0;
             for (auto& l : desc_left) {
                 if (l == left) {
@@ -123,6 +123,7 @@ namespace rgaa {
                 }
                 idx++;
             }
+            return idx;
         };
 
         //int op_idx = 0;

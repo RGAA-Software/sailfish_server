@@ -38,16 +38,14 @@ namespace rgaa
 		int real_x = (int)(kMaxNDCValue * x);
 		int real_y = (int)(kMaxNDCValue * y);
 
-		LOG_INFO("key : %d, pressed : %d, x : %f, y : %f, dx : %f, dy : %f", key, pressed, x, y, dx, dy);
-
-		LOG_INFO("cx screen : %d x %d, real : %d x %d", cx_screen, cy_screen, real_x, real_y);
+		LOGI("key : {}, pressed : {}, x : {}, y : {}, percent: x {}, y {}", (int)key, pressed, real_x, real_y, x, y);
 
 		INPUT input;
 		input.type = INPUT_MOUSE;
 		input.mi.dx = real_x;
 		input.mi.dy = real_y;
 		input.mi.mouseData = 0;
-		input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE;
+		input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK;
 		if (scroll == 0) {
 			input.mi.dwFlags |= MOUSEEVENTF_MOVE;
 		}
