@@ -3,3 +3,8 @@
 //
 
 #include "Common.h"
+
+namespace rgaa {
+
+
+}

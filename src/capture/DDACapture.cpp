@@ -185,7 +185,7 @@ namespace rgaa {
         auto capture_monitor_type = settings_->GetCaptureMonitorType();
         if (capture_monitor_type == CaptureMonitorType::kAll) {
             for (const auto& out_dup : output_duplications_) {
-                CaptureNextFrameInternal(out_dup, 3);
+                CaptureNextFrameInternal(out_dup, 0);
             }
         }
         else if (capture_monitor_type == CaptureMonitorType::kSingle) {
@@ -195,7 +195,7 @@ namespace rgaa {
             }
 
             auto out_dup = output_duplications_.at(target_monitor_idx);
-            CaptureNextFrameInternal(out_dup, 3);
+            CaptureNextFrameInternal(out_dup, 0);
         }
         return true;
     }

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <algorithm>
 
 #include "Application.h"
 #include "context/Context.h"
@@ -38,6 +39,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #undef min
+#undef max
 #endif
 
 #include <algorithm>
@@ -127,16 +129,33 @@ namespace rgaa {
 
         if (settings_->GetCaptureAPI() == CaptureAPI::kDesktopDuplication) {
             for (;;) {
+                auto begin = std::chrono::high_resolution_clock::now();
                 if (!capture_ || !capture_->CaptureNextFrame()) {
                     break;
                 }
-
+                auto end = std::chrono::high_resolution_clock::now();
+                auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+                int wait_time = std::max(0, (int)(17 - diff));
+                if (wait_time > 0) {
+                    Wait(wait_time);
+                }
+                {
+                    auto end = std::chrono::high_resolution_clock::now();
+                    auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+                    LOGI("capture + encode used : {}, wait time: {}", diff, wait_time);
+                }
                 if (cursor_capture_) {
                     auto cursor_info_msg = cursor_capture_->Capture();
                     context_->PostNetworkBinaryMessage(cursor_info_msg);
                 }
             }
         }
+    }
+
+    void Application::Wait(int ms) {
+        wait_mtx_.lock();
+        wait_condition_.wait(&wait_mtx_, ms);
+        wait_mtx_.unlock();
     }
 
     std::shared_ptr<VideoEncoder> Application::GetEncoderForIndex(int dup_idx) {
