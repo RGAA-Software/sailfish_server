@@ -9,6 +9,8 @@
 I want to control other computers in my local area network, some of the other computers have 2 monitors. I've known that VNC is a good choice, but I need to connect many computers at same time with high FPS.  
 Some business products work very well, although multiple monitors function is chargeable, therefore I start to develop this project.
 
+#### Basic framework
+
 #### Here is a list of the used technologies that you may want to lean 
 - Cpp for both server and client
 - Qt for the UI
@@ -22,12 +24,22 @@ Some business products work very well, although multiple monitors function is ch
 - ProtoBuf for serializing data
 - LevelDB for saving simple config
 
-### **[How to compile](#Compile)**
+#### Here is the tutorial
+- [0. Prepare environment & How to build ]()
+- [1. How to capture an image of your screen with DDA(Desktop Duplication Api)]()
+- [2. How to copy the image from GPU to CPU and convert to I420]()
+- [3. How to encode an image by FFmpeg]()
+- [4. How to pack the encoded frame to protobuf and send via network]()
+- [5. How to capture a cursor and send via network]()
+- [6. How to capture audio and encode by OPUS]()
+- [7. How to Replay cursor and keyboard events]()
+- [8. How to decode a encoded frame]()
+- [9. How to render frame by OpenGL]()
 
 #### Features  
 - Support H264 and H265, both hardware and software with ffmpeg
 - Support multiple clients at same time
-- Support 2 or more monitors
+- Support 1 monitor or 2 monitors
 - Support high FPS
 - Support clipboard for TEXT
 - Support audio
@@ -101,5 +113,3 @@ Some business products work very well, although multiple monitors function is ch
 
 
 ![](images/client_poem.png)
-
-### Compile
