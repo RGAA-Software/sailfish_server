@@ -53,7 +53,7 @@ namespace rgaa {
         std::map<int, ID3D11Texture2D*> cpu_side_textures_;
         std::map<int, ID3D11Texture2D*> cached_textures_;
         uint64_t last_cbk_time_ = 0;
-
+        std::vector<uint8_t> yuv_frame_data_;
     };
 
 }

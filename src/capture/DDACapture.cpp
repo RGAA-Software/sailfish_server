@@ -351,12 +351,14 @@ namespace rgaa {
 
             out_dup->frame_index_++;
 
-            std::vector<uint8_t> yuv_frame_data;
-            yuv_frame_data.resize(4 * width * height);
+            int target_yuv_frame_size = width * height * 3/2;
+            if (yuv_frame_data_.size() != target_yuv_frame_size) {
+                yuv_frame_data_.resize(target_yuv_frame_size);
+            }
             size_t pixel_size = width * height;
 
             const int uv_stride = width >> 1;
-            uint8_t *y = yuv_frame_data.data();
+            uint8_t *y = yuv_frame_data_.data();
             uint8_t *u = y + pixel_size;
             uint8_t *v = u + (pixel_size >> 2);
 
@@ -370,7 +372,7 @@ namespace rgaa {
 
             auto cp_frame = std::make_shared<CapturedFrame>();
             cp_frame->capture_type_ = CaptureType::kRawData;
-            cp_frame->raw_data_ = Data::Make((char *) yuv_frame_data.data(), desc.Width * desc.Height * 4);
+            cp_frame->raw_data_ = Data::Make((char *) yuv_frame_data_.data(), target_yuv_frame_size);
             cp_frame->frame_index_ = out_dup->frame_index_;
             cp_frame->frame_width_ = desc.Width;
             cp_frame->frame_height_ = desc.Height;
