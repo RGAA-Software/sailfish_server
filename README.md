@@ -25,7 +25,7 @@ Some business products work very well, although multiple monitors function is ch
 - LevelDB for saving simple config
 
 #### Here is the tutorial
-- [0. Prepare environment & How to build ]()
+- [0. Prepare environment & How to build ](docs/0_Prepare.md)
 - [1. How to capture an image of your screen with DDA(Desktop Duplication Api)]()
 - [2. How to copy the image from GPU to CPU and convert to I420]()
 - [3. How to encode an image by FFmpeg]()

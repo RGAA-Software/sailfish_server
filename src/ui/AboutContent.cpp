@@ -29,7 +29,7 @@ namespace rgaa {
             auto title = new QLabel(this);
             title_layout->addWidget(title);
             title->setText(tr("LIFE WITH YOU"));
-            title->setStyleSheet("font-size: 30pt; font-family: 'Demon Blade';color:#2e317c;");
+            title->setStyleSheet("font-size: 26pt; font-family: 'LoveQueen';color:#2e317c;");
             title_layout->addStretch();
             content_layout->addLayout(title_layout);
         }
@@ -49,7 +49,7 @@ namespace rgaa {
             ss << "Small hands became magic sticks" << std::endl;
             ss << "Rescue me from the hell of illness everyday" << std::endl;
             poem->setText(ss.str().c_str());
-            poem->setStyleSheet("font-size: 25pt; font-family: 'Demon Blade';color:#2e317c;");
+            poem->setStyleSheet("font-size: 22pt; font-family: 'LoveQueen';color:#2e317c;");
 
             poem_layout->addWidget(poem);
             poem_layout->addStretch();
@@ -58,19 +58,6 @@ namespace rgaa {
         }
 
         content_layout->addStretch();
-        {
-            auto title_layout = new QHBoxLayout();
-            WidgetHelper::ClearMargin(title_layout);
-            title_layout->addStretch();
-
-            auto title = new QLabel(this);
-            title_layout->addWidget(title);
-            title->setText(tr("BEST"));
-            title->setStyleSheet("font-size: 20pt; font-family: 'Demon Blade';color:#2e317c;");
-            title_layout->addSpacing(30);
-            content_layout->addLayout(title_layout);
-            content_layout->addSpacing(30);
-        }
         root_widget->setLayout(content_layout);
 
         setLayout(root_layout);

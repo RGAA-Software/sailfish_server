@@ -3,5 +3,6 @@
         <file>resources/image/logo_server.png</file>
         <file>resources/font/matrix.ttf</file>
         <file>resources/font/blade.ttf</file>
+        <file>resources/font/LOVE-Queen-2.ttf</file>
     </qresource>
 </RCC>
