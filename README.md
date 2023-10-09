@@ -28,7 +28,7 @@ Some business products work very well, although multiple monitors function is ch
 - [0. Prepare environment & How to build ](docs/0_Prepare.md)
 - [1. How to capture an image of your screen with DDA(Desktop Duplication Api)](docs/1_Capture_screen.md)
 - [2. How to convert to I420](docs/2_Convert_to_I420.md)
-- [3. How to encode an image by FFmpeg]()
+- [3. How to encode an image by FFmpeg](docs/3_FFmpeg_encoder.md)
 - [4. How to pack the encoded frame to protobuf and send via network]()
 - [5. How to capture a cursor and send via network]()
 - [6. How to capture audio and encode by OPUS]()
