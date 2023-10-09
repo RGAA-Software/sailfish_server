@@ -11,7 +11,7 @@ Tutorials, eg:
 Tutorials, eg:  
 - [CN](https://zhuanlan.zhihu.com/p/153199835)
 
-#### 2.0 Install command
+##### 2.0 Install command
 - Example
 ```c++
 ./vcpkg.exe install wil:x64-windows
