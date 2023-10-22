@@ -88,10 +88,10 @@ namespace rgaa
         WAVEFORMATEX waveFormat;
         waveFormat.wFormatTag = WAVE_FORMAT_PCM;
         waveFormat.nChannels = 2;
-        waveFormat.nSamplesPerSec = 48000;
-        waveFormat.nAvgBytesPerSec = 192000;
         waveFormat.wBitsPerSample = 16;
         waveFormat.nBlockAlign = 4;
+        waveFormat.nSamplesPerSec = 48000;
+        waveFormat.nAvgBytesPerSec = 192000;
         waveFormat.cbSize = 0;
 
         if (format_callback) {

@@ -4,10 +4,7 @@
 
 #### This is the server side of Sailfish Remote Controller, this project is NOT well tested, so, if you want to use or publish in product environment, you should debug it yourself !  
 #### The project is NOT a universal remote controller app, please read the doc following. 
-
-#### Why?
-I want to control other computers in my local area network, some of the other computers have 2 monitors. I've known that VNC is a good choice, but I need to connect many computers at same time with high FPS.  
-Some business products work very well, although multiple monitors function is chargeable, therefore I start to develop this project.
+#### This project is also intended as a tutorial to teach students how to program.
 
 #### Basic framework
 
@@ -29,9 +26,9 @@ Some business products work very well, although multiple monitors function is ch
 - [1. How to capture an image of your screen with DDA(Desktop Duplication Api)](docs/1_Capture_screen.md)
 - [2. How to convert to I420](docs/2_Convert_to_I420.md)
 - [3. How to encode an image by FFmpeg](docs/3_FFmpeg_encoder.md)
-- [4. How to pack the encoded frame to protobuf and send via network]()
-- [5. How to capture a cursor and send via network]()
-- [6. How to capture audio and encode by OPUS]()
+- [4. How to pack the encoded frame to protobuf and send via network](docs/4_Pack_to_Protobuf.md)
+- [5. How to capture a cursor](docs/5_Capture_cursor.md)
+- [6. How to capture audio and encode by OPUS](docs/6_Capture_audio.md)
 - [7. How to Replay cursor and keyboard events]()
 - [8. How to decode a encoded frame]()
 - [9. How to render frame by OpenGL]()
@@ -66,8 +63,7 @@ Some business products work very well, although multiple monitors function is ch
 - Preserve time: After the duration in seconds, the image capture, audio capture ,etc, will be destroyed.
 
 ![](images/main_ui_settings.png)
-#### Yes, A poem, for my children. 
-#### I have some incurable illnesses, thanks to my angels, I can overcome these serious matters.
+#### Yes, A poem
 #### Life with you
 - Dear angel and sweet monster
 - You are pushed to me by the mysterious power with happiness
