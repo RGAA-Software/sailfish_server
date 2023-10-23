@@ -69,22 +69,22 @@ int DDACapture::CaptureNextFrameInternal(const std::shared_ptr<OutputDuplication
 ```
 - 网页端的webcodec参考这里: see [Here(Github)](https://github.com/w3c/webcodecs) and [Here(Demo)](https://w3c.github.io/webcodecs/samples/video-decode-display/)
 
-### Here are Server's UI and instruction
-#### Server main ui
-- IP Accessible: Your computer's IP, one or more
-- Port Listening: The port that server is listening on
+### Server的UI和说明
+#### 主UI
+- IP Accessible: 服务器的IP，一个或多个
+- Port Listening: 服务监听端口
 
 ![](images/main_ui.png)
 
-#### Server settings ui
-- Encoder: H264 or H265, choose Hxxx_nvenc first
-- Capture Mode: Capture single monitor or all monitors at same time, I'm normally using 2 monitors.
-- Running Mode: "Auto fps" means to capture an image when the content has changed while "Try fixing fps" will use a cached image.
-- Multi clients: Enable multiple clients to connect at same time or not.
-- Preserve time: After the duration in seconds, the image capture, audio capture ,etc, will be destroyed.
+#### 设置UI
+- 编码器: H264 or H265, choose Hxxx_nvenc first
+- 采集模式: 如果有，则采集多个显示器。
+- Running Mode: "Auto fps" 屏幕有变化则采集，没变化不采集 "Try fixing fps" 没变化使用之前缓存的上一帧
+- Multi clients: 多个客户端可以同时连接一个服务
+- Preserve time: 如果没有人连接了，如果超过这个时间后，采集，编码，声音等都会被销毁。
 
 ![](images/main_ui_settings.png)
-#### Yes, A poem
+#### 写代码，也得写诗
 #### Life with you
 - Dear angel and sweet monster
 - You are pushed to me by the mysterious power with happiness
@@ -94,6 +94,7 @@ int DDACapture::CaptureNextFrameInternal(const std::shared_ptr<OutputDuplication
 
 ![](images/main_ui_poem.png)
 
+#### 使用很简单，接下来就不用翻译了吧。。。
 ### Here are Client's UI and instruction
 
 #### Client main ui

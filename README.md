@@ -52,7 +52,7 @@
 - File transfer: start a server int [Server Side], then copy data via this server.
 - Different monitors size: reference to the figure
 ![](images/different_monitor_size.png)
-- Encode with NVENC directly: you should modify here src/capture/DDACapture.cpp, stop to copy to CPU side and share to another ID3DTexture2D which is used by NVENC.
+- Encode with NVENC directly: you should modify here src/capture/DDACapture.cpp, stop to copy to CPU side, you should share to another ID3DTexture2D which is used by NVENC.
 ```c++
 int DDACapture::CaptureNextFrameInternal(const std::shared_ptr<OutputDuplication>& out_dup, int timeout) {
     ...
