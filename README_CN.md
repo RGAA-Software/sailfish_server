@@ -133,3 +133,6 @@ int DDACapture::CaptureNextFrameInternal(const std::shared_ptr<OutputDuplication
 
 #### If you run Server in Virtual Machine, please set the resolution to a proper size, so the frame can be encoded by FFmpeg.
 ![](images/VM_Settings.png)
+
+#### License
+想干啥就干啥
