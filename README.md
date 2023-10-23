@@ -8,7 +8,7 @@
 
 #### Basic framework
 
-#### Here is a list of the used technologies that you may want to lean 
+#### Here is a list of the used technologies that you may want to learn 
 - Cpp for both server and client
 - Qt for the UI
 - FFmpeg for encoding and decoding
