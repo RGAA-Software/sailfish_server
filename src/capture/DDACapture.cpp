@@ -279,6 +279,7 @@ namespace rgaa {
 
         auto capture_time = GetCurrentTimestamp();
 
+        std::shared_ptr<Closer> gpu_texture_release = nullptr;
         if (!use_cache) {
             hr = desk_res->QueryInterface(__uuidof(ID3D11Texture2D), (void **) &gpu_side_texture);
             desk_res->Release();
@@ -287,7 +288,7 @@ namespace rgaa {
             if (FAILED(hr) || !gpu_side_texture) {
                 return hr;
             }
-            auto gpu_texture_release = Closer::Make([gpu_side_texture]() {
+            gpu_texture_release = Closer::Make([gpu_side_texture]() {
                 gpu_side_texture->Release();
             });
         }

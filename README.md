@@ -3,13 +3,12 @@
 [简体中文](README_CN.md)
 
 #### This project is intended as a tutorial to teach students how to program with C++.
-#### This is the server side of Sailfish Remote Controller, this project is NOT well tested, so, if you want to use or publish in product environment, you should debug it yourself !  
-#### The project is NOT a universal remote controller app, please read the doc following. 
+#### This is the server side of Sailfish Remote Controller, this project is NOT well tested, so, if you want to use or publish in product environment, you should debug it yourself !
 
 #### Basic framework
-
+![](images/basic_framework.png)
 #### Here is a list of the used technologies that you may want to learn 
-- Cpp for both server and client
+- C++ for both server and client
 - Qt for the UI
 - FFmpeg for encoding and decoding
 - OpenGL for client displaying
@@ -40,13 +39,37 @@
 - Support high FPS
 - Support clipboard for TEXT
 - Support audio
+- Support detail debug information
 
-#### Roadmap
+#### You may want to do:
 - Relay mode
 - File transfer
 - Different monitors size
 - Encode with NVENC directly
 - Web client
+#### How to implement the features above?
+- Relay mode: create another program, both server and client connect to it, then relay data.
+- File transfer: start a server int [Server Side], then copy data via this server.
+- Different monitors size: reference to the figure
+![](images/different_monitor_size.png)
+- Encode with NVENC directly: you should modify here src/capture/DDACapture.cpp, stop to copy to CPU side and share to another ID3DTexture2D which is used by NVENC.
+```c++
+int DDACapture::CaptureNextFrameInternal(const std::shared_ptr<OutputDuplication>& out_dup, int timeout) {
+    ...
+    // modify here
+    if (use_cache) {
+        auto cached_texture = cached_textures_[out_dup->dup_index_];
+        d3d_device_context->CopyResource(cpu_side_textures_[out_dup->dup_index_], cached_texture);
+        } else {
+        d3d_device_context->CopyResource(cpu_side_textures_[out_dup->dup_index_], gpu_side_texture);
+        if (cached_textures_.find(out_dup->dup_index_) != cached_textures_.end()) {
+        d3d_device_context->CopyResource(cached_textures_[out_dup->dup_index_], gpu_side_texture);
+        }
+    } 
+    ...
+}
+```
+- Web client: see [Here(Github)](https://github.com/w3c/webcodecs) and [Here(Demo)](https://w3c.github.io/webcodecs/samples/video-decode-display/)
 
 ### Here are Server's UI and instruction
 #### Server main ui
