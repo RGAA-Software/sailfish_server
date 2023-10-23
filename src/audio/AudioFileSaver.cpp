@@ -29,7 +29,6 @@ namespace rgaa
 	WAVAudioFileSaver::~WAVAudioFileSaver() {
         Close();
         CoUninitialize();
-        std::cout << "===============================" << std::endl;
 	}
 
 	int WAVAudioFileSaver::WriteData(char* data, uint32_t data_length) {
@@ -39,16 +38,6 @@ namespace rgaa
         if (data == nullptr || data_length <= 0) {
             return 0;
         }
-
-        //std::cout << "data length : " << data_length << std::endl;
-
-        //static long offset = 0;
-        //for (int i = 0; i < data_length; i+=8) {
-        //    memcpy((buf + i/8*4), (data + i), 4);
-        //    //std::cout << "memcpy : " << i * 4 << " " << i << std::endl;
-        //}
-        //offset += file->Write(offset, buf, data_length / 2);
-        //
 
         LONG bytes_written = mmioWrite(hFile, const_cast<PCHAR>(data), data_length);
         if (bytes_written != data_length) {

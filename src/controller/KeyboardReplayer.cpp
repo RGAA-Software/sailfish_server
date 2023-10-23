@@ -16,6 +16,8 @@ namespace rgaa
 
 	}
 
+    // todo: Alt key may be pressed all the time, press the RIGHT ALT to release it ...
+    //
 	void KeyboardReplayer::ReplayKeyboardGlobal(const std::shared_ptr<NetMessage>& msg) {
 		auto& info = msg->keyboard_info();
 		int vk = info.vk();

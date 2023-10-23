@@ -19,16 +19,6 @@ const IID IID_IMMDeviceEnumerator = __uuidof(IMMDeviceEnumerator);
 const IID IID_IAudioClient = __uuidof(IAudioClient);
 const IID IID_IAudioCaptureClient = __uuidof(IAudioCaptureClient);
 
-//class MyAudioSink
-//{
-//public:
-//	HRESULT CopyData(BYTE* pData, UINT32 NumFrames, BOOL* pDone, WAVEFORMATEX* pwfx, HMMIO hFile);
-//};
-//
-//HRESULT WriteWaveHeader(HMMIO hFile, LPCWAVEFORMATEX pwfx, MMCKINFO* pckRIFF, MMCKINFO* pckData);
-//HRESULT FinishWaveFile(HMMIO hFile, MMCKINFO* pckRIFF, MMCKINFO* pckData);
-//HRESULT RecordAudioStream(MyAudioSink* pMySink);
-
 namespace rgaa 
 {
 
@@ -175,17 +165,12 @@ namespace rgaa
                     if (split_data_callback && !bDone) {
                         auto left_data = Data::Make(nullptr, bytes_to_write / 2);
                         auto right_data = Data::Make(nullptr, bytes_to_write / 2);
-                        //for (int i = 0; i < bytes_to_write; i += 8) {
-                        //    memcpy((left_data->DataAddr() + i / 8 * 4), ((char*)pData + i), 4);
-                        //    memcpy((right_data->DataAddr() + i / 8 * 4), ((char*)pData + i + 4), 4);
-                        //}
 
                         for (int i = 0; i < bytes_to_write; i += 4) {
                             memcpy((left_data->DataAddr() + i / 4 * 2), ((char*)pData + i), 2);
                             memcpy((right_data->DataAddr() + i / 4 * 2), ((char*)pData + i + 2), 2);
                         }
 
-                        //LOGI("l : {0:d}, r : {1:d}", left_data->Size(), right_data->Size());
                         split_data_callback(std::move(left_data), std::move(right_data));
                     }   
                 }
@@ -205,7 +190,7 @@ namespace rgaa
         }
 
         hr = pAudioClient->Stop();  // Stop recording.
-        std::cout << "stopped recording .." << hr << " " << GetLastError() << std::endl;
+
         EXIT_ON_ERROR(hr)
         if (file_saver) {
             hr = std::static_pointer_cast<WAVAudioFileSaver>(file_saver)->FinishWaveFile(&ckData, &ckRIFF);
