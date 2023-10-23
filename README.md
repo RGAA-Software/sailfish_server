@@ -2,9 +2,9 @@
 
 [简体中文](README_CN.md)
 
+#### This project is intended as a tutorial to teach students how to program with C++.
 #### This is the server side of Sailfish Remote Controller, this project is NOT well tested, so, if you want to use or publish in product environment, you should debug it yourself !  
 #### The project is NOT a universal remote controller app, please read the doc following. 
-#### This project is also intended as a tutorial to teach students how to program.
 
 #### Basic framework
 
@@ -29,9 +29,9 @@
 - [4. How to pack the encoded frame to protobuf and send via network](docs/4_Pack_to_Protobuf.md)
 - [5. How to capture a cursor](docs/5_Capture_cursor.md)
 - [6. How to capture audio and encode by OPUS](docs/6_Capture_audio.md)
-- [7. How to Replay cursor and keyboard events]()
-- [8. How to decode a encoded frame]()
-- [9. How to render frame by OpenGL]()
+- [7. How to Replay cursor and keyboard events](docs/7_Replay.md)
+- [8. How to decode a encoded frame](docs/8_Decode.md)
+- [9. How to render frame by OpenGL](docs/9_Render_OpenGL.md)
 
 #### Features  
 - Support H264 and H265, both hardware and software with ffmpeg
@@ -109,3 +109,6 @@
 
 
 ![](images/client_poem.png)
+
+#### If you run Server in Virtual Machine, please set the resolution to a proper size, so the frame can be encoded by FFmpeg.
+![](images/VM_Settings.png)
