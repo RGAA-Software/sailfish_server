@@ -1,8 +1,8 @@
 ## Sailfish Remote Controller
-
+#### TAG: (remote control software) (remote desktop) (远程桌面)
 [简体中文](README_CN.md)
 
-#### This project is intended as a tutorial to teach students how to program with C++.
+#### This project is implemented in C++ and can be used for learning purposes.
 #### This is the server side of Sailfish Remote Controller, this project is NOT well tested, so, if you want to use or publish in product environment, you should debug it yourself !
 
 #### Basic framework

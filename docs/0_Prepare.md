@@ -47,3 +47,9 @@ endif ()
 ![x想](images/env_config.png)
 
 #### 5. CMake success, then build it
+
+#### 6. After build, you can use script to publish it.
+```bash
+for example:
+python.exe .\install.py rel-debug force-update
+```
