@@ -2,7 +2,7 @@
 
 #### 这个项目是用C++实现的，可以被用于学习使用。
 #### 这个项目没有完整的测试，如果你想使用，请自己好好调试。
-
+#### !!!! 客户端在[这里](https://github.com/RGAA-Software/sailfish_client_pc) !!!!
 #### Basic framework
 ![](images/basic_framework.png)
 #### 你能学到什么

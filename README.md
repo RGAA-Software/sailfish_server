@@ -4,6 +4,7 @@
 
 #### This project is implemented in C++ and can be used for learning purposes.
 #### This is the server side of Sailfish Remote Controller, this project is NOT well tested, so, if you want to use or publish in product environment, you should debug it yourself !
+#### !!!! Client is [HERE](https://github.com/RGAA-Software/sailfish_client_pc) !!!!
 
 #### Basic framework
 ![](images/basic_framework.png)
